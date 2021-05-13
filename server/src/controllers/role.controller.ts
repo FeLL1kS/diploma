@@ -4,19 +4,19 @@ import {
   RoleModel,
 } from '../models/RoleModel';
 
-async function GetRoleById(id: string): Promise<RoleAttributes | null> {
+async function GetById(id: string): Promise<RoleAttributes | null> {
   const result: RoleAttributes | null = await RoleModel.findByPk(id) as RoleAttributes;
 
   return result;
 }
 
-async function CreateRole(role: RoleCreationAttributes): Promise<RoleAttributes> {
+async function Create(role: RoleCreationAttributes): Promise<RoleAttributes> {
   const result: RoleAttributes = await RoleModel.create(role) as RoleAttributes;
 
   return result;
 }
 
-async function UpdateRole(role: RoleCreationAttributes): Promise<RoleAttributes | null> {
+async function Update(role: RoleCreationAttributes): Promise<RoleAttributes | null> {
   const result: [number, RoleAttributes[]] = await RoleModel.update(role, {
     where: { id: role.id },
     returning: true,
@@ -25,8 +25,19 @@ async function UpdateRole(role: RoleCreationAttributes): Promise<RoleAttributes 
   return result[1][0];
 }
 
+async function DeleteById(id: string): Promise<boolean> {
+  const result = await RoleModel.destroy({
+    where: {
+      id,
+    },
+  });
+
+  return Boolean(result);
+}
+
 export default {
-  GetRoleById,
-  CreateRole,
-  UpdateRole,
+  GetById,
+  Create,
+  Update,
+  DeleteById,
 };
