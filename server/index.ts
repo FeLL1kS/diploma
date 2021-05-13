@@ -1,10 +1,13 @@
 import express from 'express';
-import dotenv from 'dotenv';
 import path from 'path';
 import cors from 'cors';
+
+import dotenv from 'dotenv';
+
 import SequelizeInstance from './src/config/SequelizeInstance';
 
 dotenv.config();
+
 const PORT: string = process.env.APP_PORT || '5000';
 const app: express.Application = express();
 

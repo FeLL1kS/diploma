@@ -1,7 +1,24 @@
 import * as Sequelize from 'sequelize';
 import SequelizeInstance from '../config/SequelizeInstance';
 
-const Project = SequelizeInstance.getSequelizeInstance().define('project', {
+export interface ProjectAttributes {
+  id: string;
+  title: string;
+  description: string;
+  dateBegin: Date;
+  dateEnd: Date;
+  controlPoints: string;
+  result: string;
+}
+
+export interface ProjectCreationAttributes
+  extends Sequelize.Optional<ProjectAttributes, 'id' | 'controlPoints' | 'result'> {}
+
+export interface ProjectInstance
+  extends Sequelize.Model<ProjectAttributes, ProjectCreationAttributes>,
+    ProjectAttributes {}
+
+export const ProjectModel = SequelizeInstance.getSequelizeInstance().define<ProjectInstance>('projects', {
   id: {
     allowNull: false,
     type: Sequelize.UUID,
@@ -31,5 +48,3 @@ const Project = SequelizeInstance.getSequelizeInstance().define('project', {
     type: Sequelize.TEXT,
   },
 });
-
-export default Project;

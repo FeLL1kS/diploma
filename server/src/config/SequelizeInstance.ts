@@ -3,7 +3,7 @@ import { Sequelize } from 'sequelize';
 class SequelizeInstance {
   private static instance: Sequelize;
 
-  private constructor() { }
+  private constructor() {}
 
   private static createInstance(): void {
     const dbHost = process.env.DB_HOST || '';

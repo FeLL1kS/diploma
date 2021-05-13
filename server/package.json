@@ -6,8 +6,8 @@
     "clear": "rm -r -f ./build && rm -r -f ./node_modules",
     "eslint": "eslint ./** --fix",
     "build": "rm -r -f ./build && tsc",
-    "start:dev": "nodemon",
-    "start": "node ./build/index.js"
+    "start": "node ./build/index.js",
+    "start:dev": "nodemon -e ts --exec \"npm run build && npm run start\""
   },
   "author": "",
   "license": "ISC",

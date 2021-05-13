@@ -1,19 +1,29 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('role', {
+    await queryInterface.createTable('roles', {
       id: {
         allowNull: false,
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV1,
         primaryKey: true,
       },
-      name: {
+      roleName: {
         allowNull: false,
         type: Sequelize.STRING(255),
       },
+      createdAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.NOW,
+      },
+      updatedAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.NOW,
+      },
     });
 
-    await queryInterface.createTable('department', {
+    await queryInterface.createTable('departments', {
       id: {
         allowNull: false,
         type: Sequelize.UUID,
@@ -24,9 +34,19 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING(255),
       },
+      createdAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.NOW,
+      },
+      updatedAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.NOW,
+      },
     });
 
-    await queryInterface.createTable('group', {
+    await queryInterface.createTable('groups', {
       id: {
         allowNull: false,
         type: Sequelize.UUID,
@@ -45,13 +65,23 @@ module.exports = {
         allowNull: false,
         type: Sequelize.UUID,
         references: {
-          model: 'department',
+          model: 'departments',
           key: 'id',
         },
       },
+      createdAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.NOW,
+      },
+      updatedAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.NOW,
+      },
     });
 
-    await queryInterface.createTable('user', {
+    await queryInterface.createTable('users', {
       id: {
         allowNull: false,
         type: Sequelize.UUID,
@@ -98,7 +128,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.UUID,
         references: {
-          model: 'department',
+          model: 'departments',
           key: 'id',
         },
       },
@@ -106,13 +136,23 @@ module.exports = {
         allowNull: false,
         type: Sequelize.UUID,
         references: {
-          model: 'role',
+          model: 'roles',
           key: 'id',
         },
       },
+      createdAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.NOW,
+      },
+      updatedAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.NOW,
+      },
     });
 
-    await queryInterface.createTable('project', {
+    await queryInterface.createTable('projects', {
       id: {
         allowNull: false,
         type: Sequelize.UUID,
@@ -141,14 +181,24 @@ module.exports = {
       result: {
         type: Sequelize.TEXT,
       },
+      createdAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.NOW,
+      },
+      updatedAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.NOW,
+      },
     });
 
-    await queryInterface.createTable('project_user', {
+    await queryInterface.createTable('projects_users', {
       projectId: {
         allowNull: false,
         type: Sequelize.UUID,
         references: {
-          model: 'project',
+          model: 'projects',
           key: 'id',
         },
       },
@@ -156,25 +206,35 @@ module.exports = {
         allowNull: false,
         type: Sequelize.UUID,
         references: {
-          model: 'user',
+          model: 'users',
           key: 'id',
         },
+      },
+      createdAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.NOW,
+      },
+      updatedAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.NOW,
       },
     });
   },
 
-  down: async (queryInterface, Sequelize) => {
+  down: async (queryInterface) => {
     /**
      * Add reverting commands here.
      *
      * Example:
      * await queryInterface.dropTable('users');
      */
-    await queryInterface.dropTable('project_user');
-    await queryInterface.dropTable('project');
-    await queryInterface.dropTable('user');
-    await queryInterface.dropTable('group');
-    await queryInterface.dropTable('department');
-    await queryInterface.dropTable('role');
+    await queryInterface.dropTable('projects_users');
+    await queryInterface.dropTable('projects');
+    await queryInterface.dropTable('users');
+    await queryInterface.dropTable('groups');
+    await queryInterface.dropTable('departments');
+    await queryInterface.dropTable('roles');
   },
 };
