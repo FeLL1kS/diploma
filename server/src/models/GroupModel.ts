@@ -34,7 +34,7 @@ export const GroupModel = SequelizeInstance.getSequelizeInstance().define<GroupI
     allowNull: false,
     type: Sequelize.UUID,
     references: {
-      model: 'department',
+      model: 'departments',
       key: 'id',
     },
   },

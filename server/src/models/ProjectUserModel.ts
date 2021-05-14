@@ -21,7 +21,7 @@ export const ProjectUserModel = SequelizeInstance.getSequelizeInstance()
         allowNull: false,
         type: Sequelize.UUID,
         references: {
-          model: 'project',
+          model: 'projects',
           key: 'id',
         },
       },
@@ -29,7 +29,7 @@ export const ProjectUserModel = SequelizeInstance.getSequelizeInstance()
         allowNull: false,
         type: Sequelize.UUID,
         references: {
-          model: 'user',
+          model: 'users',
           key: 'id',
         },
       },
