@@ -1,12 +1,14 @@
+import * as Sequelize from 'sequelize';
 import {
   ProjectUserAttributes,
   ProjectUserCreationAttributes,
   ProjectUserModel,
 } from '../models/ProjectUserModel';
 
-async function GetById(id: string): Promise<ProjectUserAttributes | null> {
+async function GetByCondition(options: Sequelize.FindOptions<ProjectUserAttributes>):
+Promise<ProjectUserAttributes | null> {
   const result: ProjectUserAttributes | null = await ProjectUserModel
-    .findByPk(id) as ProjectUserAttributes;
+    .findOne(options) as ProjectUserAttributes;
 
   return result;
 }
@@ -30,7 +32,7 @@ async function Delete(projectId: string, userId: string): Promise<boolean> {
 }
 
 export default {
-  GetById,
+  GetByCondition,
   Create,
   Delete,
 };

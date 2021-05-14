@@ -3,10 +3,11 @@ import path from 'path';
 import cors from 'cors';
 
 import dotenv from 'dotenv';
+dotenv.config();
 
 import SequelizeInstance from './src/config/SequelizeInstance';
+import authRouter from './src/routes/auth.route';
 
-dotenv.config();
 
 const PORT: string = process.env.APP_PORT || '5000';
 const app: express.Application = express();
@@ -14,6 +15,8 @@ const app: express.Application = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, './')));
+
+app.use('/api', authRouter);
 
 app.options('*', cors);
 

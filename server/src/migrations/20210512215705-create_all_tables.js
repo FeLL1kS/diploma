@@ -23,6 +23,18 @@ module.exports = {
       },
     });
 
+    await queryInterface.bulkInsert('roles', [{
+      id: '30559371-9774-463b-9c28-2c738d79b3dc',
+      roleName: 'Admin',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    }, {
+      id: 'b675969b-5ed1-4f56-a888-a96ee4874402',
+      roleName: 'User',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    }]);
+
     await queryInterface.createTable('departments', {
       id: {
         allowNull: false,
@@ -45,6 +57,28 @@ module.exports = {
         defaultValue: Sequelize.NOW,
       },
     });
+
+    await queryInterface.bulkInsert('departments', [{
+      id: '23dde730-46cd-43bb-9a5b-e8a80c4f537b',
+      departmentName: 'НХиТ',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    }, {
+      id: 'a6fe5f87-4226-4bdb-bc61-f902703ab3f3',
+      departmentName: 'ВХК',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    }, {
+      id: 'fb7aabd4-d8b0-41af-bb8f-ff2ec8f5dc7c',
+      departmentName: 'ОХиТ',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    }, {
+      id: '8831d99c-cf18-4a4c-9b09-a74dc9af254e',
+      departmentName: 'ТУ и Ци',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    }]);
 
     await queryInterface.createTable('groups', {
       id: {
@@ -135,6 +169,7 @@ module.exports = {
       roleId: {
         allowNull: false,
         type: Sequelize.UUID,
+        defaultValue: 'b675969b-5ed1-4f56-a888-a96ee4874402',
         references: {
           model: 'roles',
           key: 'id',

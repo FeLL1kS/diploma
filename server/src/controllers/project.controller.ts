@@ -1,11 +1,13 @@
+import * as Sequelize from 'sequelize';
 import {
   ProjectAttributes,
   ProjectCreationAttributes,
   ProjectModel,
 } from '../models/ProjectModel';
 
-async function GetById(id: string): Promise<ProjectAttributes | null> {
-  const result: ProjectAttributes | null = await ProjectModel.findByPk(id) as ProjectAttributes;
+async function GetByCondition(options: Sequelize.FindOptions<ProjectAttributes>):
+Promise<ProjectAttributes | null> {
+  const result: ProjectAttributes | null = await ProjectModel.findOne(options) as ProjectAttributes;
 
   return result;
 }
@@ -36,7 +38,7 @@ async function DeleteById(id: string): Promise<boolean> {
 }
 
 export default {
-  GetById,
+  GetByCondition,
   Create,
   Update,
   DeleteById,

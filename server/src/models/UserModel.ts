@@ -14,11 +14,11 @@ export interface UserAttributes {
   password: string;
   aboutMe: string;
   departmentId: string;
-  UserId: string;
+  roleId: string;
 }
 
 export interface UserCreationAttributes
-  extends Sequelize.Optional<UserAttributes, 'id' | 'patronymic' | 'dateBirth' | 'placeWork' | 'aboutMe'> {}
+  extends Sequelize.Optional<UserAttributes, 'id' | 'patronymic' | 'dateBirth' | 'placeWork' | 'aboutMe' | 'roleId'> {}
 
 export interface UserInstance
   extends Sequelize.Model<UserAttributes, UserCreationAttributes>,
@@ -73,15 +73,16 @@ export const UserModel = SequelizeInstance.getSequelizeInstance().define<UserIns
       allowNull: false,
       type: Sequelize.UUID,
       references: {
-        model: 'department',
+        model: 'departments',
         key: 'id',
       },
     },
-    UserId: {
+    roleId: {
       allowNull: false,
       type: Sequelize.UUID,
+      defaultValue: 'b675969b-5ed1-4f56-a888-a96ee4874402',
       references: {
-        model: 'User',
+        model: 'roles',
         key: 'id',
       },
     },

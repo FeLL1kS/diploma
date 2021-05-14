@@ -1,11 +1,13 @@
+import * as Sequelize from 'sequelize';
 import {
   UserAttributes,
   UserCreationAttributes,
   UserModel,
 } from '../models/UserModel';
 
-async function GetById(id: string): Promise<UserAttributes | null> {
-  const result: UserAttributes | null = await UserModel.findByPk(id) as UserAttributes;
+async function GetByCondition(options: Sequelize.FindOptions<UserAttributes>):
+Promise<UserAttributes | null> {
+  const result: UserAttributes | null = await UserModel.findOne(options) as UserAttributes;
 
   return result;
 }
@@ -36,7 +38,7 @@ async function DeleteById(id: string): Promise<boolean> {
 }
 
 export default {
-  GetById,
+  GetByCondition,
   Create,
   Update,
   DeleteById,

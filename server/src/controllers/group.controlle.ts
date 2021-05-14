@@ -1,11 +1,13 @@
+import * as Sequelize from 'sequelize';
 import {
   GroupAttributes,
   GroupCreationAttributes,
   GroupModel,
 } from '../models/GroupModel';
 
-async function GetById(id: string): Promise<GroupAttributes | null> {
-  const result: GroupAttributes | null = await GroupModel.findByPk(id) as GroupAttributes;
+async function GetByCondition(options: Sequelize.FindOptions<GroupAttributes>):
+Promise<GroupAttributes | null> {
+  const result: GroupAttributes | null = await GroupModel.findOne(options) as GroupAttributes;
 
   return result;
 }
@@ -36,7 +38,7 @@ async function DeleteById(id: string): Promise<boolean> {
 }
 
 export default {
-  GetById,
+  GetByCondition,
   Create,
   Update,
   DeleteById,

@@ -1,12 +1,14 @@
+import * as Sequelize from 'sequelize';
 import {
   DepartmentAttributes,
   DepartmentCreationAttributes,
   DepartmentModel,
 } from '../models/DepartmentModel';
 
-async function GetById(id: string): Promise<DepartmentAttributes | null> {
+async function GetByCondition(options: Sequelize.FindOptions<DepartmentAttributes>):
+Promise<DepartmentAttributes | null> {
   const result: DepartmentAttributes | null = await DepartmentModel
-    .findByPk(id) as DepartmentAttributes;
+    .findOne(options) as DepartmentAttributes;
 
   return result;
 }
@@ -40,7 +42,7 @@ async function DeleteById(id: string): Promise<boolean> {
 }
 
 export default {
-  GetById,
+  GetByCondition,
   Create,
   Update,
   DeleteById,

@@ -1,11 +1,13 @@
+import * as Sequelize from 'sequelize';
 import {
   RoleAttributes,
   RoleCreationAttributes,
   RoleModel,
 } from '../models/RoleModel';
 
-async function GetById(id: string): Promise<RoleAttributes | null> {
-  const result: RoleAttributes | null = await RoleModel.findByPk(id) as RoleAttributes;
+async function GetByCondition(options: Sequelize.FindOptions<RoleAttributes>):
+Promise<RoleAttributes | null> {
+  const result: RoleAttributes | null = await RoleModel.findOne(options) as RoleAttributes;
 
   return result;
 }
@@ -36,7 +38,7 @@ async function DeleteById(id: string): Promise<boolean> {
 }
 
 export default {
-  GetById,
+  GetByCondition,
   Create,
   Update,
   DeleteById,
