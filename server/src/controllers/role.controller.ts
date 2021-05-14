@@ -2,8 +2,8 @@ import * as Sequelize from 'sequelize';
 import {
   RoleAttributes,
   RoleCreationAttributes,
-  RoleModel,
-} from '../models/RoleModel';
+} from 'diploma';
+import RoleModel from '../models/RoleModel';
 
 async function GetByCondition(options: Sequelize.FindOptions<RoleAttributes>):
 Promise<RoleAttributes | null> {

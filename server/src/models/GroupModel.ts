@@ -1,21 +1,8 @@
 import * as Sequelize from 'sequelize';
+import { GroupInstance } from 'diploma';
 import SequelizeInstance from '../config/SequelizeInstance';
 
-export interface GroupAttributes {
-  id: string;
-  course: string;
-  group: string;
-  departmentId: string;
-}
-
-export interface GroupCreationAttributes
-  extends Sequelize.Optional<GroupAttributes, 'id'> {}
-
-export interface GroupInstance
-  extends Sequelize.Model<GroupAttributes, GroupCreationAttributes>,
-    GroupAttributes {}
-
-export const GroupModel = SequelizeInstance.getSequelizeInstance().define<GroupInstance>('groups', {
+export default SequelizeInstance.getSequelizeInstance().define<GroupInstance>('groups', {
   id: {
     allowNull: false,
     type: Sequelize.UUID,

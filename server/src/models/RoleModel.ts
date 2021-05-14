@@ -1,19 +1,8 @@
 import * as Sequelize from 'sequelize';
+import { RoleInstance } from 'diploma';
 import SequelizeInstance from '../config/SequelizeInstance';
 
-export interface RoleAttributes {
-  id: string;
-  roleName: string;
-}
-
-export interface RoleCreationAttributes
-  extends Sequelize.Optional<RoleAttributes, 'id'> {}
-
-export interface RoleInstance
-  extends Sequelize.Model<RoleAttributes, RoleCreationAttributes>,
-    RoleAttributes {}
-
-export const RoleModel = SequelizeInstance.getSequelizeInstance().define<RoleInstance>('roles', {
+export default SequelizeInstance.getSequelizeInstance().define<RoleInstance>('roles', {
   id: {
     allowNull: false,
     type: Sequelize.UUID,

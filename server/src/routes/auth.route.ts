@@ -10,7 +10,7 @@ import jwt from 'jsonwebtoken';
 
 import authMiddleware from '../middlewares/auth.middleware';
 import UserController from '../controllers/user.controller';
-import { UserAttributes, UserCreationAttributes } from '../models/UserModel';
+import { UserAttributes, UserCreationAttributes } from 'diploma';
 
 const authRouter = Router();
 

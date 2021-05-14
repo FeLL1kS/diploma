@@ -5,6 +5,7 @@ import {
   axiosPostFunction,
 } from '../../helpers/axiosInstance';
 import { UserData, IUserResponse } from './Authentication.interfaces';
+import { UserCreationAttributes } from 'diploma'
 
 export class AuthenticationStore {
   public state: 'loading' | 'loaded' | 'error' = 'loading';
@@ -18,9 +19,20 @@ export class AuthenticationStore {
     this.fetchUserInfo();
   }
 
+  public register = async (user: UserCreationAttributes): Promise<void> => {
+    try {
+      const response: IUserResponse = await axiosPostFunction('/registration', user);
+      this.setAuthState(response.user, response.token);      
+
+      this.state = 'loaded';
+    } catch (error) {
+      this.setErrorState();
+    }
+  }
+
   public login = async (email: string, password: string): Promise<void> => {
     try {
-      const response: IUserResponse = await axiosPostFunction('/auth/login', {
+      const response: IUserResponse = await axiosPostFunction('/login', {
         email,
         password,
       });
@@ -28,7 +40,7 @@ export class AuthenticationStore {
 
       this.state = 'loaded';
     } catch (error) {
-      this.state = 'error';
+      this.setErrorState();
     }
   };
 
@@ -41,7 +53,7 @@ export class AuthenticationStore {
       const token: string | null = localStorage.getItem('token');
       if (token !== null) {
         const response: IUserResponse = await axiosFetchFunction<IUserResponse>(
-          '/auth/auth',
+          '/auth',
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('token')}`,

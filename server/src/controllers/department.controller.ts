@@ -2,8 +2,8 @@ import * as Sequelize from 'sequelize';
 import {
   DepartmentAttributes,
   DepartmentCreationAttributes,
-  DepartmentModel,
-} from '../models/DepartmentModel';
+} from 'diploma';
+import DepartmentModel from '../models/DepartmentModel';
 
 async function GetByCondition(options: Sequelize.FindOptions<DepartmentAttributes>):
 Promise<DepartmentAttributes | null> {

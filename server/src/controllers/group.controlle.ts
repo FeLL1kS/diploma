@@ -2,8 +2,8 @@ import * as Sequelize from 'sequelize';
 import {
   GroupAttributes,
   GroupCreationAttributes,
-  GroupModel,
-} from '../models/GroupModel';
+} from 'diploma';
+import GroupModel from '../models/GroupModel';
 
 async function GetByCondition(options: Sequelize.FindOptions<GroupAttributes>):
 Promise<GroupAttributes | null> {

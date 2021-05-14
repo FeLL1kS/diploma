@@ -2,8 +2,8 @@ import * as Sequelize from 'sequelize';
 import {
   ProjectAttributes,
   ProjectCreationAttributes,
-  ProjectModel,
-} from '../models/ProjectModel';
+} from 'diploma';
+import ProjectModel from '../models/ProjectModel';
 
 async function GetByCondition(options: Sequelize.FindOptions<ProjectAttributes>):
 Promise<ProjectAttributes | null> {

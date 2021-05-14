@@ -1,19 +1,8 @@
 import * as Sequelize from 'sequelize';
+import { DepartmentInstance } from 'diploma';
 import SequelizeInstance from '../config/SequelizeInstance';
 
-export interface DepartmentAttributes {
-  id: string;
-  departmentName: string;
-}
-
-export interface DepartmentCreationAttributes
-  extends Sequelize.Optional<DepartmentAttributes, 'id'> {}
-
-export interface DepartmentInstance
-  extends Sequelize.Model<DepartmentAttributes, DepartmentCreationAttributes>,
-    DepartmentAttributes {}
-
-export const DepartmentModel = SequelizeInstance.getSequelizeInstance().define<DepartmentInstance>('departments', {
+export default SequelizeInstance.getSequelizeInstance().define<DepartmentInstance>('departments', {
   id: {
     allowNull: false,
     type: Sequelize.UUID,

@@ -2,8 +2,8 @@ import * as Sequelize from 'sequelize';
 import {
   UserAttributes,
   UserCreationAttributes,
-  UserModel,
-} from '../models/UserModel';
+} from 'diploma';
+import UserModel from '../models/UserModel';
 
 async function GetByCondition(options: Sequelize.FindOptions<UserAttributes>):
 Promise<UserAttributes | null> {

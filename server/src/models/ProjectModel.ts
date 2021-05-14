@@ -1,24 +1,8 @@
 import * as Sequelize from 'sequelize';
+import { ProjectInstance } from 'diploma';
 import SequelizeInstance from '../config/SequelizeInstance';
 
-export interface ProjectAttributes {
-  id: string;
-  title: string;
-  description: string;
-  dateBegin: Date;
-  dateEnd: Date;
-  controlPoints: string;
-  result: string;
-}
-
-export interface ProjectCreationAttributes
-  extends Sequelize.Optional<ProjectAttributes, 'id' | 'controlPoints' | 'result'> {}
-
-export interface ProjectInstance
-  extends Sequelize.Model<ProjectAttributes, ProjectCreationAttributes>,
-    ProjectAttributes {}
-
-export const ProjectModel = SequelizeInstance.getSequelizeInstance().define<ProjectInstance>('projects', {
+export default SequelizeInstance.getSequelizeInstance().define<ProjectInstance>('projects', {
   id: {
     allowNull: false,
     type: Sequelize.UUID,
