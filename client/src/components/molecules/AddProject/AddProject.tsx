@@ -73,10 +73,10 @@ const AddProject = observer(
       resetForm,
     } = useForm(initialFormValues, true, validate);
   
-    const handleSubmit = (event: React.SyntheticEvent) => {
+    const handleSubmit = async (event: React.SyntheticEvent) => {
       event.preventDefault();
       if (validate()) {
-        createProject(values);
+        await createProject(values);
         setAddedStatus(true);
         resetForm();
       }
