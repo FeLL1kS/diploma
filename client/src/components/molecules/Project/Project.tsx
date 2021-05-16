@@ -43,9 +43,6 @@ const Project = observer(() => {
         Руководитель: {project.manager.firstName} {project.manager.lastName}
       </Typography>
       <Typography className={classes.paragraph}>
-        Руководитель: {project.manager.firstName} {project.manager.lastName}
-      </Typography>
-      <Typography className={classes.paragraph}>
         Команда:
         <ul>
           {project.team.map((user: UserAttributes) => {
