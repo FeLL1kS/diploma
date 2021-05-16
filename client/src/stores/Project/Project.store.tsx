@@ -18,7 +18,6 @@ export class ProjectStore {
       const project: ProjectResponse = await axiosFetchFunction(`/projects/${this.id}`);
 
       this.project = project;
-      console.log(project);
       this.state = 'loaded';
     } catch {
       this.state = 'error';

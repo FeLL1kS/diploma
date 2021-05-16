@@ -32,8 +32,6 @@ const useStyles = makeStyles({
 const Projects = observer(() => {
   const { projects } = useStore(ProjectsContext);
 
-  console.log(projects);
-
   const classes = useStyles();
 
   if (projects === null) {
