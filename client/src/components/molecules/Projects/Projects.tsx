@@ -1,32 +1,83 @@
 import React from 'react'
-import { Typography } from '@material-ui/core'
+import { makeStyles, Paper, Table, TableBody, TableCell as MuiTableCell, TableContainer, TableHead, TableRow, Typography, withStyles, Theme, createStyles } from '@material-ui/core'
+import { observer } from 'mobx-react-lite';
+import { useStore } from '../../../helpers/useStore';
+import { ProjectsContext } from '../../../stores/Projects';
+import { Link } from 'react-router-dom';
+import { UserAttributes } from 'diploma';
 
-export default function Projects() {
+const TableCell = withStyles((theme: Theme) => 
+  createStyles({
+    head: {
+      border: 'none',
+    },
+    body: {
+      border: 'solid 1px #e0e0e0',
+      padding: `${theme.spacing(6)}px 0`,
+    }
+  }),
+)(MuiTableCell);
+
+const useStyles = makeStyles({
+  table: {
+    minWidth: 650,
+    borderSpacing: '0 20px !important',
+    borderCollapse: 'separate',
+  },
+  tableRow: {
+    textDecoration: 'none',
+  }
+});
+
+const Projects = observer(() => {
+  const { projects } = useStore(ProjectsContext);
+
+  const classes = useStyles();
+
+  if (projects === null) {
+    return (
+      <div>
+        Еще не было создано ни одного проекта
+      </div>
+    )
+  }
+
   return (
     <div>
-      <Typography paragraph>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-        ut labore et dolore magna aliqua. Rhoncus dolor purus non enim praesent elementum
-        facilisis leo vel. Risus at ultrices mi tempus imperdiet. Semper risus in hendrerit
-        gravida rutrum quisque non tellus. Convallis convallis tellus id interdum velit laoreet id
-        donec ultrices. Odio morbi quis commodo odio aenean sed adipiscing. Amet nisl suscipit
-        adipiscing bibendum est ultricies integer quis. Cursus euismod quis viverra nibh cras.
-        Metus vulputate eu scelerisque felis imperdiet proin fermentum leo. Mauris commodo quis
-        imperdiet massa tincidunt. Cras tincidunt lobortis feugiat vivamus at augue. At augue eget
-        arcu dictum varius duis at consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem
-        donec massa sapien faucibus et molestie ac.
-      </Typography>
-      <Typography paragraph>
-        Consequat mauris nunc congue nisi vitae suscipit. Fringilla est ullamcorper eget nulla
-        facilisi etiam dignissim diam. Pulvinar elementum integer enim neque volutpat ac
-        tincidunt. Ornare suspendisse sed nisi lacus sed viverra tellus. Purus sit amet volutpat
-        consequat mauris. Elementum eu facilisis sed odio morbi. Euismod lacinia at quis risus sed
-        vulputate odio. Morbi tincidunt ornare massa eget egestas purus viverra accumsan in. In
-        hendrerit gravida rutrum quisque non tellus orci ac. Pellentesque nec nam aliquam sem et
-        tortor. Habitant morbi tristique senectus et. Adipiscing elit duis tristique sollicitudin
-        nibh sit. Ornare aenean euismod elementum nisi quis eleifend. Commodo viverra maecenas
-        accumsan lacus vel facilisis. Nulla posuere sollicitudin aliquam ultrices sagittis orci a.
-      </Typography>
+      <TableContainer>
+        <Table className={classes.table} size="small" aria-label="a dense table">
+          <TableHead>
+            <TableRow>
+              <TableCell align="center">№</TableCell>
+              <TableCell align="center">Название проекта</TableCell>
+              <TableCell align="center">Заказчик</TableCell>
+              <TableCell align="center">Руководитель</TableCell>
+              <TableCell align="center">Команда проекта</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {projects.map((project, idx) => (
+              <TableRow component={Link} to={project.id} key={project.id} className={classes.tableRow}>
+                <TableCell align="center">{idx}</TableCell>
+                <TableCell align="center">{project.title}</TableCell>
+                <TableCell align="center">{project.manager.firstName} {project.manager.lastName}</TableCell>
+                <TableCell align="center">{project.manager.firstName} {project.manager.lastName}</TableCell>
+                <TableCell align="center">
+                  <ul>
+                    {project.team.map((user: UserAttributes) => {
+                      return (
+                        <li>{user.firstName} {user.lastName}</li>
+                      )
+                    })}
+                  </ul>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   )
-}
+})
+
+export default Projects;

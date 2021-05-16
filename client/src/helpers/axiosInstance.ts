@@ -11,7 +11,7 @@ class HttpError extends Error {
 }
 
 export const axiosInstance: AxiosInstance = axios.create({
-  baseURL: `/api`,
+  baseURL: `http://localhost:5000/api`,
 });
 
 const handleResponse = async <T>(response: AxiosResponse<T>): Promise<T> => {

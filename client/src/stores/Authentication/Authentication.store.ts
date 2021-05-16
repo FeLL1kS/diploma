@@ -33,7 +33,7 @@ export class AuthenticationStore {
   public login = async (email: string, password: string): Promise<void> => {
     try {
       const response: IUserResponse = await axiosPostFunction('/login', {
-        email,
+        mail: email,
         password,
       });
       this.setAuthState(response.user, response.token);

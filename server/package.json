@@ -7,7 +7,7 @@
     "eslint": "eslint ./** --fix",
     "build": "rm -r -f ./build && tsc",
     "start": "node ./build/index.js",
-    "start:dev": "nodemon -e ts --exec \"npm run build && npm run start\""
+    "start:dev": "nodemon -e ts --exec \"npm run build && npm run start\" || exit 1"
   },
   "author": "",
   "license": "ISC",

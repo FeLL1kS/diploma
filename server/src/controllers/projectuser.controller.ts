@@ -6,9 +6,9 @@ import {
 import ProjectUserModel from '../models/ProjectUserModel';
 
 async function GetByCondition(options: Sequelize.FindOptions<ProjectUserAttributes>):
-Promise<ProjectUserAttributes | null> {
-  const result: ProjectUserAttributes | null = await ProjectUserModel
-    .findOne(options) as ProjectUserAttributes;
+Promise<ProjectUserAttributes[] | null> {
+  const result: ProjectUserAttributes[] | null = await ProjectUserModel
+    .findAll(options) as ProjectUserAttributes[];
 
   return result;
 }

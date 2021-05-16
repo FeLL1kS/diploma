@@ -1,4 +1,6 @@
-import { ProjectAttributes, ProjectCreationAttributes } from 'diploma';
+import {
+  ProjectAttributes, ProjectCreationAttributes, ProjectUserAttributes, UserAttributes,
+} from 'diploma';
 import express, { Router } from 'express';
 import {
   check,
@@ -7,9 +9,73 @@ import {
   validationResult,
 } from 'express-validator';
 import ProjectController from '../controllers/project.controller';
+import projectuserController from '../controllers/projectuser.controller';
+import userController from '../controllers/user.controller';
 import authMiddleware from '../middlewares/auth.middleware';
 
+interface ProjectResponse {
+  id: string;
+  title: string;
+  description: string;
+  dateBegin: Date;
+  dateEnd: Date;
+  controlPoints: string;
+  result: string;
+  manager: UserAttributes;
+  team: (UserAttributes | undefined)[];
+}
+
 const projectsRouter = Router();
+
+const getProjectResponse = async (project: ProjectAttributes): Promise<ProjectResponse | null> => {
+  const manager: UserAttributes | null = await userController.GetByCondition({
+    where: {
+      id: project.manager,
+    },
+  });
+
+  if (manager === null) {
+    return null;
+  }
+
+  const projectsUsers: ProjectUserAttributes[] | null = await projectuserController.GetByCondition(
+    {
+      where: {
+        projectId: project.id,
+      },
+    },
+  );
+
+  let team: (UserAttributes | undefined)[] = [];
+
+  if (projectsUsers !== null) {
+    team = await Promise.all(projectsUsers.map(async (projectUser: ProjectUserAttributes) => {
+      const user: UserAttributes | null = await userController.GetByCondition({
+        where: {
+          id: projectUser.userId,
+        },
+      });
+
+      if (user !== null) {
+        return user;
+      }
+    }));
+  }
+
+  const p: ProjectResponse = {
+    id: project.id,
+    title: project.title,
+    description: project.description,
+    dateBegin: project.dateBegin,
+    dateEnd: project.dateEnd,
+    controlPoints: project.controlPoints,
+    result: project.result,
+    manager,
+    team,
+  };
+
+  return p;
+};
 
 projectsRouter.get(
   '/',
@@ -17,7 +83,15 @@ projectsRouter.get(
     try {
       const projects: ProjectAttributes[] = await ProjectController.GetAll();
 
-      return res.json(projects);
+      const resultProjects: (ProjectResponse | null)[] = await Promise.all(
+        projects.map(async (project: ProjectAttributes) => {
+          const p: ProjectResponse | null = await getProjectResponse(project);
+
+          return p;
+        }),
+      );
+
+      return res.json(resultProjects);
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Server Error' });
@@ -46,10 +120,9 @@ projectsRouter.get(
         });
       }
 
-      res.json({
-        message: 'Project was found',
-        project,
-      });
+      const result: ProjectResponse | null = await getProjectResponse(project!); 
+
+      res.json(result);
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Server Error' });

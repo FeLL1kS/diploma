@@ -2,7 +2,7 @@ import React from 'react';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import ListIcon from '@material-ui/icons/List';
 import HelpIcon from '@material-ui/icons/Help';
-import MailIcon from '@material-ui/icons/Mail';
+import VpnKeyIcon from '@material-ui/icons/VpnKey';
 import MenuIcon from '@material-ui/icons/Menu';
 import { AccountCircle } from '@material-ui/icons';
 import { 
@@ -31,6 +31,7 @@ import { Link, Route } from 'react-router-dom';
 import { UserData } from '../../../stores/Authentication';
 import Projects from '../Projects';
 import Project from '../Project';
+import Login from '../../pages/Login/Login';
 
 const drawerWidth = 240;
 
@@ -123,6 +124,14 @@ export default function ResponsiveDrawer({ userData, isUserAuthorized, logout }:
             <ListItemText primary='Тех поддержка' />
           </ListItem>
         </Link>
+        {!isUserAuthorized &&
+          <Link to='/login' className={classes.link}>
+            <ListItem button>
+              <ListItemIcon className={classes.icon}><VpnKeyIcon /></ListItemIcon>
+              <ListItemText primary='Войти' />
+            </ListItem>
+          </Link>
+        }
       </List>
     </div>
   );
@@ -134,35 +143,42 @@ export default function ResponsiveDrawer({ userData, isUserAuthorized, logout }:
           <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
             <MenuIcon />
           </IconButton>
+          <Typography variant="h6" className={classes.title}>
+          </Typography>
           {isUserAuthorized && (
-            <div>
-              <IconButton
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenu}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={open}
-                onClose={handleClose}
-              >
-                <MenuItem onClick={logout}>Выйти</MenuItem>
-              </Menu>
-            </div>
+            <>
+              <Typography>
+                {userData?.firstName} {userData?.lastName}
+              </Typography>
+              <div>
+                <IconButton
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={handleMenu}
+                  color="inherit"
+                >
+                  <AccountCircle />
+                </IconButton>
+                <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={open}
+                  onClose={handleClose}
+                >
+                  <MenuItem onClick={logout}>Выйти</MenuItem>
+                </Menu>
+              </div>
+            </>
           )}
         </Toolbar>
       </AppBar>
@@ -198,8 +214,9 @@ export default function ResponsiveDrawer({ userData, isUserAuthorized, logout }:
       </nav>
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        <Route path='/' component={Projects} />
-        <Route path='/:id' component={Project} />
+        <Route exact path='/login' component={Login} />
+        <Route exact path='/' component={Projects} />
+        <Route exact path='/:id' component={Project} />
       </main>
     </div>
   );

@@ -1,21 +1,23 @@
-import { ProjectAttributes } from "diploma";
 import { makeAutoObservable } from "mobx";
 import { axiosFetchFunction } from "../../helpers/axiosInstance";
+import { ProjectResponse } from "./Projects.interface";
 
 export class ProjectsStore {
   public state: 'loading' | 'loaded' | 'error' = 'loading';
 
-  public projects: ProjectAttributes[] | null = null;
+  public projects: ProjectResponse[] | null = null;
 
   constructor() {
     makeAutoObservable(this);
+    this.fetchAllProjects();
   }
 
-  public fetchAllProjects = async (): Promise<void> => {
+  private fetchAllProjects = async (): Promise<void> => {
     try {
-      const projects: ProjectAttributes[] = await axiosFetchFunction('/projects');
+      const projects: ProjectResponse[] = await axiosFetchFunction('/projects');
 
       this.projects = projects;
+      this.state = 'loaded';
     } catch {
       this.state = 'error';
     }

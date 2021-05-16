@@ -1,21 +1,70 @@
 import React from 'react'
-import { Typography } from '@material-ui/core'
+import { Container, createStyles, makeStyles, Paper, Theme, Typography } from '@material-ui/core'
+import { observer } from 'mobx-react-lite'
+import { ProjectContext } from '../../../stores/Project';
+import { useStore } from '../../../helpers/useStore';
+import { UserAttributes } from 'diploma';
 
-export default function Project() {
+const useStyles = makeStyles((theme: Theme) => createStyles({
+  header: {
+    paddingBottom: theme.spacing(4),
+  },
+  paragraph: {
+    paddingBottom: theme.spacing(2),
+    fontSize: '1.4rem',
+  },
+  paper: {
+    padding: theme.spacing(4)
+  }
+}));
+
+const Project = observer(() => {
+  const { project } = useStore(ProjectContext);
+
+  const classes = useStyles();
+
+  if (project === null) {
+    return (
+      <div>
+        Проект не найден
+      </div>
+    )
+  }
+
   return (
-    <div>
-      <Typography paragraph>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-        ut labore et dolore magna aliqua. Rhoncus dolor purus non enim praesent elementum
-        facilisis leo vel. Risus at ultrices mi tempus imperdiet. Semper risus in hendrerit
-        gravida rutrum quisque non tellus. Convallis convallis tellus id interdum velit laoreet id
-        donec ultrices. Odio morbi quis commodo odio aenean sed adipiscing. Amet nisl suscipit
-        adipiscing bibendum est ultricies integer quis. Cursus euismod quis viverra nibh cras.
-        Metus vulputate eu scelerisque felis imperdiet proin fermentum leo. Mauris commodo quis
-        imperdiet massa tincidunt. Cras tincidunt lobortis feugiat vivamus at augue. At augue eget
-        arcu dictum varius duis at consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem
-        donec massa sapien faucibus et molestie ac.
+    <Container>
+      <Typography className={classes.header} align='center' variant='h4'>
+        {project.title}
       </Typography>
-    </div>
+      <Typography className={classes.paragraph}>
+        Заказчик: {project.manager.firstName} {project.manager.lastName}
+      </Typography>
+      <Typography className={classes.paragraph}>
+        Руководитель: {project.manager.firstName} {project.manager.lastName}
+      </Typography>
+      <Typography className={classes.paragraph}>
+        Руководитель: {project.manager.firstName} {project.manager.lastName}
+      </Typography>
+      <Typography className={classes.paragraph}>
+        Команда:
+        <ul>
+          {project.team.map((user: UserAttributes) => {
+            return (
+              <li>{user.firstName} {user.lastName}</li>
+            )
+          })}
+        </ul>
+      </Typography>
+      <Typography className={classes.paragraph}>
+        Информация о проекте:
+      </Typography>
+      <Paper className={classes.paper}>
+        <Typography className={classes.paragraph}>
+          {project.description}
+        </Typography>
+      </Paper>
+    </Container>
   )
-}
+})
+
+export default Project;

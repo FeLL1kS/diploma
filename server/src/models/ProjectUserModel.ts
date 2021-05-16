@@ -2,7 +2,7 @@ import * as Sequelize from 'sequelize';
 import { ProjectUserInstance } from 'diploma';
 import SequelizeInstance from '../config/SequelizeInstance';
 
-export default SequelizeInstance.getSequelizeInstance()
+const ProjectUserModel = SequelizeInstance.getSequelizeInstance()
   .define<ProjectUserInstance>(
     'projects_users',
     {
@@ -24,3 +24,7 @@ export default SequelizeInstance.getSequelizeInstance()
       },
     },
   );
+
+ProjectUserModel.removeAttribute('id');
+
+export default ProjectUserModel;
