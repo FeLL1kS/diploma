@@ -5,6 +5,7 @@ import { useStore } from '../../../helpers/useStore';
 import { ProjectsContext } from '../../../stores/Projects';
 import { Link } from 'react-router-dom';
 import { UserAttributes } from 'diploma';
+import { AuthenticationContext } from '../../../stores/Authentication';
 
 const TableCell = withStyles((theme: Theme) => 
   createStyles({
@@ -31,6 +32,7 @@ const useStyles = makeStyles({
 
 const Projects = observer(() => {
   const { projects } = useStore(ProjectsContext);
+  const { isUserAuthorized } = useStore(AuthenticationContext);
 
   const classes = useStyles();
 
@@ -44,16 +46,18 @@ const Projects = observer(() => {
 
   return (
     <div>
-      <div style={{float: 'right'}}>
-        <Button
-          href='/project/add'
-          variant="contained" 
-          color="primary" 
-          type="submit"
-        >
-          Добавить проект
-        </Button>
-      </div>
+      {isUserAuthorized &&
+        <div style={{float: 'right'}}>
+          <Button
+            href='/project/add'
+            variant="contained" 
+            color="primary"
+            type="submit"
+          >
+            Добавить проект
+          </Button>
+        </div>
+      }
       <TableContainer>
         <Table className={classes.table} size="small" aria-label="a dense table">
           <TableHead>
