@@ -135,7 +135,6 @@ const Registration = observer(
                   <TextField 
                     variant="outlined"
                     margin="normal"
-                    required
                     fullWidth
                     id="patronymic"
                     label="Отчество"
@@ -161,7 +160,6 @@ const Registration = observer(
                   <TextField 
                     variant="outlined"
                     margin="normal"
-                    required
                     fullWidth
                     id="placeWork"
                     label="Место работы"
@@ -225,7 +223,6 @@ const Registration = observer(
                   <TextField 
                     variant="outlined"
                     margin="normal"
-                    required
                     fullWidth
                     id="aboutMe"
                     label="О себе"
