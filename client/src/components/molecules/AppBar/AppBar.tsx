@@ -32,6 +32,7 @@ import Projects from '../Projects';
 import Project from '../Project';
 import Login from '../../pages/Login/Login';
 import Registration from '../../pages/Registration';
+import AddProject from '../AddProject';
 
 const drawerWidth = 240;
 
@@ -87,7 +88,7 @@ interface Props {
   logout: () => void;
 }
 
-export default function ResponsiveDrawer({ userData, isUserAuthorized, logout }: Props) {
+export default ({ userData, isUserAuthorized, logout }: Props) => {
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -217,6 +218,7 @@ export default function ResponsiveDrawer({ userData, isUserAuthorized, logout }:
         <Route exact path='/auth/login' component={Login} />
         <Route exact path='/auth/registration' component={Registration} />
         <Route exact path='/' component={Projects} />
+        <Route exact path='/project/add' component={AddProject} />
         <Route exact path='/:id' component={Project} />
       </main>
     </div>

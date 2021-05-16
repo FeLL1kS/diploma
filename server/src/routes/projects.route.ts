@@ -157,9 +157,11 @@ projectsRouter.post(
 
       const project: ProjectAttributes = await ProjectController.Create(data);
 
+      const result: ProjectResponse | null = await getProjectResponse(project);
+
       res.json({
         message: 'Project was created',
-        project,
+        project: result,
       });
     } catch (error) {
       console.error(error);

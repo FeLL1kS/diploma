@@ -1,5 +1,5 @@
 import React from 'react'
-import { makeStyles, Table, TableBody, TableCell as MuiTableCell, TableContainer, TableHead, TableRow, withStyles, Theme, createStyles } from '@material-ui/core'
+import { makeStyles, Table, TableBody, TableCell as MuiTableCell, TableContainer, TableHead, TableRow, withStyles, Theme, createStyles, Button } from '@material-ui/core'
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../../helpers/useStore';
 import { ProjectsContext } from '../../../stores/Projects';
@@ -32,6 +32,8 @@ const useStyles = makeStyles({
 const Projects = observer(() => {
   const { projects } = useStore(ProjectsContext);
 
+  console.log(projects);
+
   const classes = useStyles();
 
   if (projects === null) {
@@ -44,6 +46,16 @@ const Projects = observer(() => {
 
   return (
     <div>
+      <div style={{float: 'right'}}>
+        <Button
+          href='/project/add'
+          variant="contained" 
+          color="primary" 
+          type="submit"
+        >
+          Добавить проект
+        </Button>
+      </div>
       <TableContainer>
         <Table className={classes.table} size="small" aria-label="a dense table">
           <TableHead>

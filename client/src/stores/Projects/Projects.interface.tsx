@@ -11,3 +11,8 @@ export interface ProjectResponse {
   manager: UserAttributes;
   team: UserAttributes[];
 }
+
+export interface ProjectCreatedResponse {
+  message: string;
+  project: ProjectResponse;
+}
