@@ -8,9 +8,9 @@ import {
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-import { UserAttributes, UserCreationAttributes } from 'diploma';
 import authMiddleware from '../middlewares/auth.middleware';
 import UserController from '../controllers/user.controller';
+import { UserAttributes, UserCreationAttributes } from 'diploma';
 
 const authRouter = Router();
 
@@ -65,7 +65,21 @@ authRouter.post(
         throw new Error();
       }
 
-      return res.json({ message: 'User was created' });
+      const token: string = jwt.sign(
+        { id: user.id },
+        process.env.JWT_SECRET_KEY || 'SECRET_KEY',
+        { expiresIn: '1h' },
+      );
+
+      return res.json({
+        token,
+        user: {
+          id: user.id,
+          email: user.mail,
+          firstName: user.firstName,
+          lastName: user.lastName,
+        },
+      });
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Server Error' });

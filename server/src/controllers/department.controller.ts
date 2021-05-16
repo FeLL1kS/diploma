@@ -5,6 +5,14 @@ import {
 } from 'diploma';
 import DepartmentModel from '../models/DepartmentModel';
 
+async function GetAll():
+Promise<DepartmentAttributes[] | null> {
+  const result: DepartmentAttributes[] | null = await DepartmentModel
+    .findAll() as DepartmentAttributes[];
+
+  return result;
+}
+
 async function GetByCondition(options: Sequelize.FindOptions<DepartmentAttributes>):
 Promise<DepartmentAttributes | null> {
   const result: DepartmentAttributes | null = await DepartmentModel
@@ -42,6 +50,7 @@ async function DeleteById(id: string): Promise<boolean> {
 }
 
 export default {
+  GetAll,
   GetByCondition,
   Create,
   Update,

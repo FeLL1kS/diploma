@@ -1,5 +1,5 @@
 import React from 'react'
-import { makeStyles, Paper, Table, TableBody, TableCell as MuiTableCell, TableContainer, TableHead, TableRow, Typography, withStyles, Theme, createStyles } from '@material-ui/core'
+import { makeStyles, Table, TableBody, TableCell as MuiTableCell, TableContainer, TableHead, TableRow, withStyles, Theme, createStyles } from '@material-ui/core'
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../../helpers/useStore';
 import { ProjectsContext } from '../../../stores/Projects';

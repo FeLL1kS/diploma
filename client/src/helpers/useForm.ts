@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 export function useForm(
-  initialFormValues: Record<string, unknown>,
+  initialFormValues: any,
   validateOnChange = false,
   validate: (object: Record<string, unknown>) => void
 ): any {
@@ -10,6 +10,8 @@ export function useForm(
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
+    console.log(name)
+    console.log(value)
     setValues({
       ...values,
       [name]: value,

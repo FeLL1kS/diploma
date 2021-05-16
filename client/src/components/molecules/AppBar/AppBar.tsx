@@ -1,5 +1,4 @@
 import React from 'react';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
 import ListIcon from '@material-ui/icons/List';
 import HelpIcon from '@material-ui/icons/Help';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
@@ -32,6 +31,7 @@ import { UserData } from '../../../stores/Authentication';
 import Projects from '../Projects';
 import Project from '../Project';
 import Login from '../../pages/Login/Login';
+import Registration from '../../pages/Registration';
 
 const drawerWidth = 240;
 
@@ -125,7 +125,7 @@ export default function ResponsiveDrawer({ userData, isUserAuthorized, logout }:
           </ListItem>
         </Link>
         {!isUserAuthorized &&
-          <Link to='/login' className={classes.link}>
+          <Link to='/auth/login' className={classes.link}>
             <ListItem button>
               <ListItemIcon className={classes.icon}><VpnKeyIcon /></ListItemIcon>
               <ListItemText primary='Войти' />
@@ -214,7 +214,8 @@ export default function ResponsiveDrawer({ userData, isUserAuthorized, logout }:
       </nav>
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        <Route exact path='/login' component={Login} />
+        <Route exact path='/auth/login' component={Login} />
+        <Route exact path='/auth/registration' component={Registration} />
         <Route exact path='/' component={Projects} />
         <Route exact path='/:id' component={Project} />
       </main>

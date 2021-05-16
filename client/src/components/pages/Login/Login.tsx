@@ -12,7 +12,8 @@ import { Redirect } from 'react-router';
 import { useStore } from '../../../helpers/useStore';
 import { AuthenticationContext } from '../../../stores/Authentication';
 import Loading from '../../atoms/Loading';
-import { Box } from '@material-ui/core';
+import { Box, Grid, Link as MuiLink } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -100,6 +101,17 @@ const Login = observer(
               >
                 Войти
               </Button>
+              <Grid container>
+                <Grid item xs>
+                  <MuiLink component={Link} to="#" variant="body2">
+                  </MuiLink>
+                </Grid>
+                <Grid item>
+                  <MuiLink component={Link} to="/auth/registration" variant="body2">
+                    Регистрация
+                  </MuiLink>
+                </Grid>
+              </Grid>
             </form>
           </div>
         </Container>
