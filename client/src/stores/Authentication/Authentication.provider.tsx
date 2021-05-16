@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import { useLocalObservable } from 'mobx-react-lite';
 
 import { AuthenticationStore } from './Authentication.store';
-import { Loading } from '../../components/atoms/Loading';
+import Loading from '../../components/atoms/Loading';
 
 export interface ProviderProps {
   children: React.ReactNode;

@@ -8,27 +8,27 @@ import {
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
+import { UserAttributes, UserCreationAttributes } from 'diploma';
 import authMiddleware from '../middlewares/auth.middleware';
 import UserController from '../controllers/user.controller';
-import { UserAttributes, UserCreationAttributes } from 'diploma';
 
 const authRouter = Router();
 
 authRouter.post(
   '/registration',
   [
-    check('departmentId', 'Department Id must be UUID').isLength({ min: 36 }),
-    check('firstName', 'Name must be longer than 1 character').isLength({ min: 1 }),
+    check('departmentId', 'Department Id must be UUID').isUUID(),
+    check('firstName', 'First Name must be longer than 1 character').isLength({ min: 1 }),
     check('lastName', 'Last Name must be longer than 1 character').isLength({
       min: 1,
     }),
-    check('login', 'Name must be longer than 1 character').isLength({ min: 1 }),
-    check('mail', 'Name must be longer than 1 character').isEmail(),
+    check('login', 'Login must be longer than 1 character').isLength({ min: 1 }),
+    check('mail', 'Enter a valid email').isEmail(),
     check(
       'password',
       'Password must be longer than 3 and shorter than 12 characters',
     ).isLength({ min: 3, max: 12 }),
-    check('phoneNumber', 'Name must be longer than 1 character').isLength({ min: 1 }),
+    check('phoneNumber', 'Phone Number must be longer than 1 character').isLength({ min: 1 }),
   ],
   async (req: express.Request, res: express.Response) => {
     try {

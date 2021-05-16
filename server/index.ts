@@ -7,6 +7,7 @@ dotenv.config();
 
 import SequelizeInstance from './src/config/SequelizeInstance';
 import authRouter from './src/routes/auth.route';
+import projectsRouter from './src/routes/projects.route';
 
 
 const PORT: string = process.env.APP_PORT || '5000';
@@ -17,6 +18,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, './')));
 
 app.use('/api', authRouter);
+app.use('/api/projects', projectsRouter)
 
 app.options('*', cors);
 

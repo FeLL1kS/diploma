@@ -8,6 +8,7 @@ export interface ProjectAttributes {
   dateEnd: Date;
   controlPoints: string;
   result: string;
+  manager: string;
 }
 
 export interface ProjectCreationAttributes

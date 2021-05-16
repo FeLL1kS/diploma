@@ -5,6 +5,12 @@ import {
 } from 'diploma';
 import ProjectModel from '../models/ProjectModel';
 
+async function GetAll(): Promise<ProjectAttributes[]> {
+  const result: ProjectAttributes[] = await ProjectModel.findAll();
+
+  return result;
+}
+
 async function GetByCondition(options: Sequelize.FindOptions<ProjectAttributes>):
 Promise<ProjectAttributes | null> {
   const result: ProjectAttributes | null = await ProjectModel.findOne(options) as ProjectAttributes;
@@ -38,6 +44,7 @@ async function DeleteById(id: string): Promise<boolean> {
 }
 
 export default {
+  GetAll,
   GetByCondition,
   Create,
   Update,

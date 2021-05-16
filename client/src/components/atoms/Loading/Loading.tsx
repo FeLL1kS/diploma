@@ -7,7 +7,7 @@ interface LoadingProps {
   message?: string;
 }
 
-export function Loading(props: LoadingProps): JSX.Element {
+export default function Loading(props: LoadingProps): JSX.Element {
   const { message = 'Loading...' } = props;
 
   return (

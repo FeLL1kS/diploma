@@ -23,7 +23,6 @@ export default (
       process.env.JWT_SECRET_KEY || 'SECRET_KEY',
     );
     req.body.user = decoded;
-
     next();
   } catch (error) {
     return res.status(401).json({ message: 'Auth Error' });

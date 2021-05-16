@@ -31,4 +31,12 @@ export default SequelizeInstance.getSequelizeInstance().define<ProjectInstance>(
   result: {
     type: Sequelize.TEXT,
   },
+  manager: {
+    allowNull: false,
+    type: Sequelize.UUID,
+    references: {
+      model: 'users',
+      key: 'id',
+    },
+  },
 });

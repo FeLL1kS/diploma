@@ -216,6 +216,13 @@ module.exports = {
       result: {
         type: Sequelize.TEXT,
       },
+      manager: {
+        type: Sequelize.UUID,
+        references: {
+          model: 'users',
+          key: 'id',
+        },
+      },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,
