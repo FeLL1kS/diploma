@@ -5,7 +5,7 @@ import {
 } from 'diploma';
 import GroupModel from '../models/GroupModel';
 
-async function GetByCondition(options: Sequelize.FindOptions<GroupAttributes>):
+async function GetOneByCondition(options: Sequelize.FindOptions<GroupAttributes>):
 Promise<GroupAttributes | null> {
   const result: GroupAttributes | null = await GroupModel.findOne(options) as GroupAttributes;
 
@@ -38,7 +38,7 @@ async function DeleteById(id: string): Promise<boolean> {
 }
 
 export default {
-  GetByCondition,
+  GetOneByCondition,
   Create,
   Update,
   DeleteById,

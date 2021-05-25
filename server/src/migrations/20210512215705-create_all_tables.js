@@ -239,12 +239,51 @@ module.exports = {
       },
     });
 
-    await queryInterface.createTable('projects_users', {
+    await queryInterface.createTable('vacancies', {
+      id: {
+        allowNull: false,
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV1,
+        primaryKey: true,
+      },
       projectId: {
         allowNull: false,
         type: Sequelize.UUID,
         references: {
           model: 'projects',
+          key: 'id',
+        },
+      },
+      role: {
+        allowNull: false,
+        type: Sequelize.STRING(255),
+      },
+      number: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        defaultValue: 1
+      },
+      requirements: {
+        type: Sequelize.TEXT,
+      },
+      createdAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.NOW,
+      },
+      updatedAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.NOW,
+      },
+    });
+
+    await queryInterface.createTable('vacancies_users', {
+      vacancyId: {
+        allowNull: false,
+        type: Sequelize.UUID,
+        references: {
+          model: 'vacancies',
           key: 'id',
         },
       },
@@ -276,7 +315,8 @@ module.exports = {
      * Example:
      * await queryInterface.dropTable('users');
      */
-    await queryInterface.dropTable('projects_users');
+    await queryInterface.dropTable('vacancies_users');
+    await queryInterface.dropTable('vacancies');
     await queryInterface.dropTable('projects');
     await queryInterface.dropTable('users');
     await queryInterface.dropTable('groups');

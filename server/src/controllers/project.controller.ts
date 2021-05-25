@@ -11,7 +11,7 @@ async function GetAll(): Promise<ProjectAttributes[]> {
   return result;
 }
 
-async function GetByCondition(options: Sequelize.FindOptions<ProjectAttributes>):
+async function GetOneByCondition(options: Sequelize.FindOptions<ProjectAttributes>):
 Promise<ProjectAttributes | null> {
   const result: ProjectAttributes | null = await ProjectModel.findOne(options) as ProjectAttributes;
 
@@ -45,7 +45,7 @@ async function DeleteById(id: string): Promise<boolean> {
 
 export default {
   GetAll,
-  GetByCondition,
+  GetOneByCondition,
   Create,
   Update,
   DeleteById,

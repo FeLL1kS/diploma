@@ -2,7 +2,7 @@ import * as Sequelize from 'sequelize';
 import { ProjectInstance } from 'diploma';
 import SequelizeInstance from '../config/SequelizeInstance';
 
-export default SequelizeInstance.getSequelizeInstance().define<ProjectInstance>('projects', {
+const ProjectModel: Sequelize.ModelCtor<ProjectInstance> = SequelizeInstance.getSequelizeInstance().define<ProjectInstance>('projects', {
   id: {
     allowNull: false,
     type: Sequelize.UUID,
@@ -44,3 +44,5 @@ export default SequelizeInstance.getSequelizeInstance().define<ProjectInstance>(
     },
   },
 });
+
+export default ProjectModel;

@@ -2,14 +2,54 @@ import * as Sequelize from 'sequelize';
 import {
   UserAttributes,
   UserCreationAttributes,
+  VacancyAttributes,
+  VacancyUserAttributes,
 } from 'diploma';
 import UserModel from '../models/UserModel';
+import VacancyUserController from './vacancyuser.controller';
+import VacancyController from './vacancy.controller.';
 
-async function GetByCondition(options: Sequelize.FindOptions<UserAttributes>):
+async function GetOneByCondition(options: Sequelize.FindOptions<UserAttributes>):
 Promise<UserAttributes | null> {
-  const result: UserAttributes | null = await UserModel.findOne(options) as UserAttributes;
+  const result: UserAttributes | null = await UserModel.findOne(options) as UserAttributes | null;
 
   return result;
+}
+
+const GetTeamByProjectId = async (projectId: string): Promise<UserAttributes[]> => {
+  const vacancies: VacancyAttributes[] = await VacancyController.GetAllByCondition({
+    where: {
+      projectId,
+    },
+  });
+
+  const team: UserAttributes[] = [];
+
+  await Promise.all(vacancies.map(async (vacancy: VacancyAttributes) => {
+    const vacanciesUsers: VacancyUserAttributes[] = await VacancyUserController.GetAllByCondition({
+      where: {
+        vacancyId: vacancy.id,
+      },
+    });
+
+    await Promise.all(vacanciesUsers.map(async (vacancyUser: VacancyUserAttributes) => {
+      const user: UserAttributes | null = await GetOneByCondition({
+        where: {
+          id: vacancyUser.userId,
+        },
+      });
+
+      if (user && team.includes(user)) {
+        return;
+      }
+
+      if (user) {
+        team.push(user);
+      };
+    }));
+  }));
+
+  return team;
 }
 
 async function Create(user: UserCreationAttributes): Promise<UserAttributes> {
@@ -38,7 +78,8 @@ async function DeleteById(id: string): Promise<boolean> {
 }
 
 export default {
-  GetByCondition,
+  GetOneByCondition,
+  GetTeamByProjectId,
   Create,
   Update,
   DeleteById,

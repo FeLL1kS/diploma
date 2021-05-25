@@ -42,7 +42,7 @@ authRouter.post(
 
       const user: UserCreationAttributes = req.body;
 
-      const candidate: UserAttributes | null = await UserController.GetByCondition({
+      const candidate: UserAttributes | null = await UserController.GetOneByCondition({
         where: {
           mail: user.mail,
         },
@@ -92,7 +92,7 @@ authRouter.post(
   async (req: express.Request, res: express.Response) => {
     try {
       const { mail, password } = req.body;
-      const user: UserAttributes | null = await UserController.GetByCondition({
+      const user: UserAttributes | null = await UserController.GetOneByCondition({
         where: {
           mail,
         },
@@ -134,7 +134,7 @@ authRouter.get(
   authMiddleware,
   async (req: express.Request, res: express.Response) => {
     try {
-      const user: UserAttributes | null = await UserController.GetByCondition({
+      const user: UserAttributes | null = await UserController.GetOneByCondition({
         where: {
           id: req.body.user.id,
         },

@@ -13,7 +13,7 @@ Promise<DepartmentAttributes[] | null> {
   return result;
 }
 
-async function GetByCondition(options: Sequelize.FindOptions<DepartmentAttributes>):
+async function GetOneByCondition(options: Sequelize.FindOptions<DepartmentAttributes>):
 Promise<DepartmentAttributes | null> {
   const result: DepartmentAttributes | null = await DepartmentModel
     .findOne(options) as DepartmentAttributes;
@@ -51,7 +51,7 @@ async function DeleteById(id: string): Promise<boolean> {
 
 export default {
   GetAll,
-  GetByCondition,
+  GetOneByCondition,
   Create,
   Update,
   DeleteById,

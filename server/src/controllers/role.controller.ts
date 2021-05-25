@@ -5,7 +5,7 @@ import {
 } from 'diploma';
 import RoleModel from '../models/RoleModel';
 
-async function GetByCondition(options: Sequelize.FindOptions<RoleAttributes>):
+async function GetOneByCondition(options: Sequelize.FindOptions<RoleAttributes>):
 Promise<RoleAttributes | null> {
   const result: RoleAttributes | null = await RoleModel.findOne(options) as RoleAttributes;
 
@@ -38,7 +38,7 @@ async function DeleteById(id: string): Promise<boolean> {
 }
 
 export default {
-  GetByCondition,
+  GetOneByCondition,
   Create,
   Update,
   DeleteById,

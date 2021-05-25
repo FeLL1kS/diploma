@@ -1,16 +1,16 @@
 import * as Sequelize from 'sequelize';
-import { ProjectUserInstance } from 'diploma';
+import { VacancyUserInstance } from 'diploma';
 import SequelizeInstance from '../config/SequelizeInstance';
 
-const ProjectUserModel = SequelizeInstance.getSequelizeInstance()
-  .define<ProjectUserInstance>(
-    'projects_users',
+const VacancyUserModel = SequelizeInstance.getSequelizeInstance()
+  .define<VacancyUserInstance>(
+    'vacancies_users',
     {
-      projectId: {
+      vacancyId: {
         allowNull: false,
         type: Sequelize.UUID,
         references: {
-          model: 'projects',
+          model: 'vacancies',
           key: 'id',
         },
       },
@@ -25,6 +25,6 @@ const ProjectUserModel = SequelizeInstance.getSequelizeInstance()
     },
   );
 
-ProjectUserModel.removeAttribute('id');
+VacancyUserModel.removeAttribute('id');
 
-export default ProjectUserModel;
+export default VacancyUserModel;
