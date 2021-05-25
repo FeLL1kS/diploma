@@ -10,13 +10,14 @@ import {
 } from 'express-validator';
 import ProjectController from '../controllers/project.controller';
 import projectuserController from '../controllers/projectuser.controller';
-import userController from '../controllers/user.controller';
+import UserController from '../controllers/user.controller';
 import authMiddleware from '../middlewares/auth.middleware';
 
 interface ProjectResponse {
   id: string;
   title: string;
   description: string;
+  customer: string;
   dateBegin: Date;
   dateEnd: Date;
   controlPoints: string;
@@ -28,7 +29,7 @@ interface ProjectResponse {
 const projectsRouter = Router();
 
 const getProjectResponse = async (project: ProjectAttributes): Promise<ProjectResponse | null> => {
-  const manager: UserAttributes | null = await userController.GetByCondition({
+  const manager: UserAttributes | null = await UserController.GetByCondition({
     where: {
       id: project.manager,
     },
@@ -50,7 +51,7 @@ const getProjectResponse = async (project: ProjectAttributes): Promise<ProjectRe
 
   if (projectsUsers !== null) {
     team = await Promise.all(projectsUsers.map(async (projectUser: ProjectUserAttributes) => {
-      const user: UserAttributes | null = await userController.GetByCondition({
+      const user: UserAttributes | null = await UserController.GetByCondition({
         where: {
           id: projectUser.userId,
         },
@@ -66,6 +67,7 @@ const getProjectResponse = async (project: ProjectAttributes): Promise<ProjectRe
     id: project.id,
     title: project.title,
     description: project.description,
+    customer: project.customer,
     dateBegin: project.dateBegin,
     dateEnd: project.dateEnd,
     controlPoints: project.controlPoints,
@@ -135,6 +137,7 @@ projectsRouter.post(
   [
     authMiddleware,
     check('manager', 'Manager Id must be UUID').isUUID(),
+    check('customer', 'Customer must be longer than 1 character').isLength({ min: 1 }),
     check('title', 'Title must be longer than 1 character').isLength({ min: 1 }),
     check('controlPoints', 'Control Points must be longer than 1 character').isLength({ min: 1 }),
     check('description', 'Description must be longer than 1 character').isLength({
@@ -170,12 +173,68 @@ projectsRouter.post(
   },
 );
 
+projectsRouter.post(
+  `/addUser`,
+  [
+    authMiddleware,
+    check('projectId', 'projectId must be UUID').isUUID(),
+  ],
+  async (req: express.Request, res: express.Response) => {
+    try {
+      const errors: Result<ValidationError> = validationResult(req);
+
+      if (!errors.isEmpty()) {
+        return res
+          .status(400)
+          .json({ message: 'Incorrect request', ...errors });
+      }
+
+      const { projectId } = req.body;
+
+      const user: UserAttributes | null = await UserController.GetByCondition({
+        where: {
+          id: req.body.user.id,
+        },
+      });
+
+      if (!user) {
+        return res
+          .status(400)
+          .json({ message: 'User not found' });
+      }
+
+      const projectUser: ProjectUserAttributes[] | null = await projectuserController.GetByCondition({
+        where: {
+          projectId: projectId,
+          userId: user.id
+        }
+      })
+
+      if (projectUser) {
+        return res
+        .status(400)
+        .json({ message: 'A user has already been assigned to this project' });
+      }
+
+      projectuserController.Create({
+        projectId,
+        userId: user.id,
+      })
+
+      return res.json(user);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+)
+
 projectsRouter.put(
   '/',
   [
     authMiddleware,
     check('id', 'Id must be UUID').isUUID(),
     check('manager', 'Manager Id must be UUID').isUUID(),
+    check('customer', 'Customer must be longer than 1 character').isLength({ min: 1 }),
     check('title', 'Title must be longer than 1 character').isLength({ min: 1 }),
     check('controlPoints', 'Control Points must be longer than 1 character').isLength({ min: 1 }),
     check('description', 'Description must be longer than 1 character').isLength({

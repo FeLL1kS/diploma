@@ -14,7 +14,6 @@ import { Box, Grid } from '@material-ui/core';
 import { useForm } from '../../../helpers/useForm';
 import { ProjectCreationAttributes } from 'diploma';
 import Form from '../Form';
-import { DepartmentsContext } from '../../../stores/Departments';
 import { ProjectsContext } from '../../../stores/Projects';
 import { AuthenticationContext } from '../../../stores/Authentication';
 
@@ -41,6 +40,7 @@ const AddProject = observer(
     const initialFormValues: ProjectCreationAttributes = {
       title: '',
       description: '',
+      customer: '',
       dateBegin: new Date(),
       dateEnd: new Date(),
       controlPoints: '',
@@ -122,6 +122,19 @@ const AddProject = observer(
                     name="description"
                     autoComplete="description"
                     value={values.description}
+                    autoFocus
+                    onChange={handleInputChange}
+                  />
+                  <TextField 
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="customer"
+                    label="Заказчик"
+                    name="customer"
+                    autoComplete="customer"
+                    value={values.customer}
                     autoFocus
                     onChange={handleInputChange}
                   />

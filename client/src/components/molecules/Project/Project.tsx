@@ -1,9 +1,10 @@
 import React from 'react'
-import { Container, createStyles, makeStyles, Paper, Theme, Typography } from '@material-ui/core'
+import { Box, Button, Container, createStyles, makeStyles, Paper, Theme, Typography } from '@material-ui/core'
 import { observer } from 'mobx-react-lite'
 import { ProjectContext } from '../../../stores/Project';
 import { useStore } from '../../../helpers/useStore';
 import { UserAttributes } from 'diploma';
+import { AuthenticationContext } from '../../../stores/Authentication';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   header: {
@@ -19,7 +20,8 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 }));
 
 const Project = observer(() => {
-  const { project } = useStore(ProjectContext);
+  const { project, addUserToProject } = useStore(ProjectContext);
+  const { isUserAuthorized } = useStore(AuthenticationContext);
 
   const classes = useStyles();
 
@@ -31,13 +33,19 @@ const Project = observer(() => {
     )
   }
 
+  const handleClick = async (event: React.SyntheticEvent) => {
+    event.preventDefault();
+
+    addUserToProject();
+  };
+
   return (
     <Container>
       <Typography className={classes.header} align='center' variant='h4'>
         {project.title}
       </Typography>
       <Typography className={classes.paragraph}>
-        Заказчик: {project.manager.firstName} {project.manager.lastName}
+        Заказчик: {project.customer}
       </Typography>
       <Typography className={classes.paragraph}>
         Руководитель: {project.manager.firstName} {project.manager.lastName}
@@ -51,6 +59,16 @@ const Project = observer(() => {
             )
           })}
         </ul>
+        {isUserAuthorized &&
+          <Button
+            onClick={handleClick}
+            variant="contained" 
+            color="primary"
+            type="submit"
+          >
+            Записаться
+          </Button>
+        }
       </Typography>
       <Typography className={classes.paragraph}>
         Информация о проекте:

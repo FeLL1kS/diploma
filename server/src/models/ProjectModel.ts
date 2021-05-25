@@ -17,6 +17,10 @@ export default SequelizeInstance.getSequelizeInstance().define<ProjectInstance>(
     allowNull: false,
     type: Sequelize.TEXT,
   },
+  customer: {
+    allowNull: false,
+    type: Sequelize.STRING(255),
+  },
   dateBegin: {
     allowNull: false,
     type: Sequelize.DATE,

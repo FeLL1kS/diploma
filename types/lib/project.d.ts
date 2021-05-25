@@ -4,6 +4,7 @@ export interface ProjectAttributes {
   id: string;
   title: string;
   description: string;
+  customer: string;
   dateBegin: Date;
   dateEnd: Date;
   controlPoints: string;

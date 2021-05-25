@@ -74,7 +74,7 @@ const Projects = observer(() => {
               <TableRow component={Link} to={project.id} key={project.id} className={classes.tableRow}>
                 <TableCell align="center">{idx}</TableCell>
                 <TableCell align="center">{project.title}</TableCell>
-                <TableCell align="center">{project.manager.firstName} {project.manager.lastName}</TableCell>
+                <TableCell align="center">{project.customer}</TableCell>
                 <TableCell align="center">{project.manager.firstName} {project.manager.lastName}</TableCell>
                 <TableCell align="center">
                   <ul>
