@@ -1,16 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { observer } from 'mobx-react';
-import { Button, Container, Grid, TextField, Typography } from '@material-ui/core';
+import { Button, Container, Grid, TextField } from '@material-ui/core';
 import Form from '../Form';
 import { ProjectCreationAttributes } from 'diploma';
 import { useStore } from '../../../helpers/useStore';
 import { AuthenticationContext } from '../../../stores/Authentication';
 import { ProjectsContext } from '../../../stores/Projects';
 import { useForm } from '../../../helpers/useForm';
-
-import AddIcon from '@material-ui/icons/Add';
 
 const useStyles = makeStyles((theme) => ({
   submit: {

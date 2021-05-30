@@ -1,4 +1,4 @@
-import { ProjectDTO, VacancyDTO, VacancyUserDTO } from "diploma";
+import { ProjectDTO, VacancyDTO } from "diploma";
 import { makeAutoObservable } from "mobx";
 import { axiosFetchFunction, axiosPostFunction } from "../../helpers/axiosInstance";
 import { VacancyUserCreatedResponse } from "./Project.interface";

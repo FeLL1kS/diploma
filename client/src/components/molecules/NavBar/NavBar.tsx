@@ -28,8 +28,8 @@ import {
 import { Link, Route } from 'react-router-dom';
 
 import { UserData } from '../../../stores/Authentication';
-import Projects from '../Projects';
-import Project from '../Project';
+import Projects from '../../pages/Projects';
+import Project from '../../pages/Project';
 import Login from '../../pages/Login/Login';
 import Registration from '../../pages/Registration';
 import AddProject from '../AddProject';
@@ -82,13 +82,13 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface Props {
+interface NavBarProps {
   userData: UserData | undefined;
   isUserAuthorized: boolean;
   logout: () => void;
 }
 
-export default ({ userData, isUserAuthorized, logout }: Props) => {
+const NavBar = ({ userData, isUserAuthorized, logout }: NavBarProps) => {
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -224,3 +224,5 @@ export default ({ userData, isUserAuthorized, logout }: Props) => {
     </div>
   );
 }
+
+export default NavBar;

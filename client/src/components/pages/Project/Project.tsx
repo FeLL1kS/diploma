@@ -1,9 +1,27 @@
 import React from 'react'
-import { Box, Button, Container, createStyles, makeStyles, Paper, Tab as MuiTab, Table, TableBody, TableCell as MuiTableCell, TableContainer, TableHead, TableRow, Tabs, Theme, Typography, withStyles } from '@material-ui/core'
+import { 
+  Box, 
+  Button, 
+  Container, 
+  createStyles, 
+  makeStyles, 
+  Paper, 
+  Tab as MuiTab, 
+  Table, 
+  TableBody, 
+  TableCell as MuiTableCell, 
+  TableContainer, 
+  TableHead, 
+  TableRow, 
+  Tabs, 
+  Theme, 
+  Typography, 
+  withStyles 
+} from '@material-ui/core'
 import { observer } from 'mobx-react-lite'
 import { ProjectContext } from '../../../stores/Project';
 import { useStore } from '../../../helpers/useStore';
-import { UserAttributes, VacancyAttributes, VacancyDTO } from 'diploma';
+import { UserAttributes, VacancyDTO } from 'diploma';
 import { AuthenticationContext } from '../../../stores/Authentication';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
@@ -88,7 +106,7 @@ const TabPanel = ({ children, value, index, ...other }: TabPanelProps) => {
 
 const Project = observer(() => {
   const { project, projectVacancies, addUserToProjectVacancy } = useStore(ProjectContext);
-  const { isUserAuthorized, userData } = useStore(AuthenticationContext);
+  const { isUserAuthorized } = useStore(AuthenticationContext);
   const [value, setValue] = React.useState(0);
 
   const classes = useStyles();
@@ -100,9 +118,6 @@ const Project = observer(() => {
       </div>
     )
   }
-  const handleClick = async (vacancyId: string) => {
-    addUserToProjectVacancy(vacancyId);
-  };
 
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);

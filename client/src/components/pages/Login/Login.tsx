@@ -90,7 +90,6 @@ const Login = observer(
       errors,
       setErrors,
       handleInputChange,
-      resetForm,
     } = useForm({
       initialErrorValues,
       initialFormValues,
