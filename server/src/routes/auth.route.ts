@@ -8,9 +8,9 @@ import {
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
+import { UserAttributes, UserCreationAttributes } from 'diploma';
 import authMiddleware from '../middlewares/auth.middleware';
 import UserController from '../controllers/user.controller';
-import { UserAttributes, UserCreationAttributes } from 'diploma';
 
 const authRouter = Router();
 
@@ -149,6 +149,7 @@ authRouter.get(
         process.env.JWT_SECRET_KEY || 'SECRET_KEY',
         { expiresIn: '1h' },
       );
+
       return res.json({
         token,
         user: {

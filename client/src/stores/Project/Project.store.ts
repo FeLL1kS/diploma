@@ -1,7 +1,7 @@
-import { UserAttributes, VacancyAttributes } from "diploma";
+import { ProjectDTO, VacancyDTO, VacancyUserDTO } from "diploma";
 import { makeAutoObservable } from "mobx";
 import { axiosFetchFunction, axiosPostFunction } from "../../helpers/axiosInstance";
-import { ProjectResponse } from "../Projects/Projects.interface";
+import { VacancyUserCreatedResponse } from "./Project.interface";
 
 export class ProjectStore {
   public state: 'loading' | 'loaded' | 'error' = 'loading';
@@ -10,9 +10,9 @@ export class ProjectStore {
 
   private id: string | null = null;
 
-  public project: ProjectResponse | null = null;
+  public project: ProjectDTO | null = null;
 
-  public projectVacancies: VacancyAttributes[] | null = null;
+  public projectVacancies: VacancyDTO[] | null = null;
 
   constructor() {
     makeAutoObservable(this);
@@ -20,10 +20,10 @@ export class ProjectStore {
 
   private fetchData = async (): Promise<void> => {
     try {
-      const project: ProjectResponse = await axiosFetchFunction(`/projects/${this.id}`);
+      const project: ProjectDTO = await axiosFetchFunction(`/projects/${this.id}`);
       this.project = project;
 
-      const projectVacancies: VacancyAttributes[] = await axiosFetchFunction(`/projects/${this.id}/vacancies`);
+      const projectVacancies: VacancyDTO[] = await axiosFetchFunction(`/projects/${this.id}/vacancies`);
       this.projectVacancies = projectVacancies;
       
       this.state = 'loaded';
@@ -39,9 +39,17 @@ export class ProjectStore {
         return;
       }
     
-      const user: UserAttributes = await axiosPostFunction(`/projects/${this.id}/vacancies/${vacancyId}`);
+      const response: VacancyUserCreatedResponse = await axiosPostFunction(`/projects/vacancies/${vacancyId}/addUser`);
       
-      this.project.team.push(user);
+      this.project.team.push(response.vacancyUser.user);
+
+      this.projectVacancies = this.projectVacancies!.map((vacancy: VacancyDTO) => {
+        if (vacancy.id === response.vacancyUser.vacancyId) {
+          vacancy.currentNumber++;
+        }
+
+        return vacancy;
+      })
     } catch {
       this.state = 'error';
     }

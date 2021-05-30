@@ -220,7 +220,7 @@ module.exports = {
       result: {
         type: Sequelize.TEXT,
       },
-      manager: {
+      managerId: {
         type: Sequelize.UUID,
         references: {
           model: 'users',
@@ -261,7 +261,12 @@ module.exports = {
       number: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        defaultValue: 1
+        defaultValue: 1,
+      },
+      currentNumber: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        defaultValue: 0,
       },
       requirements: {
         type: Sequelize.TEXT,

@@ -1,11 +1,7 @@
 import React, { useState } from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
+import { Avatar, Button, TextField as MuiTextField, Typography, Container } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
+import { createStyles, makeStyles, Theme, withStyles } from '@material-ui/core/styles';
 
 import { observer } from 'mobx-react';
 import { Redirect } from 'react-router';
@@ -14,8 +10,10 @@ import { AuthenticationContext } from '../../../stores/Authentication';
 import Loading from '../../atoms/Loading';
 import { Box, Grid, Link as MuiLink } from '@material-ui/core';
 import { Link } from 'react-router-dom';
+import Form from '../../molecules/Form';
+import { useForm } from '../../../helpers/useForm';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   paper: {
     display: 'flex',
     flexDirection: 'column',
@@ -34,19 +32,77 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const TextField = withStyles((theme: Theme) => createStyles({
+  root: {
+    margin: 0,
+  },
+}))(MuiTextField);
+
+interface ILogin {
+  email: string;
+  password: string;
+}
+
+interface ILoginErrors {
+  email: string;
+  password: string;
+}
+
+const initialFormValues: ILogin = {
+  email: '',
+  password: '',
+};
+
+const initialErrorValues: ILoginErrors = {
+  email: '',
+  password: '',
+};
+
 const Login = observer(
   (): JSX.Element => {
-    const { login, isUserAuthorized } = useStore(AuthenticationContext);
     const classes = useStyles();
 
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const { login, isUserAuthorized } = useStore(AuthenticationContext);
+
     const [isLoading, setLoadingStatus] = useState(false);
 
-    const formSubmit = (event: React.SyntheticEvent) => {
-      setLoadingStatus(true);
+    const validate = (): boolean => {
+      const fieldValues: ILogin = values;
+
+      let temp = { ...errors };
+
+      temp.email = fieldValues.email ? '' : 'Введите email';
+      temp.password = fieldValues.password ? '' : 'Введите пароль';
+
+      setErrors({
+        ...temp
+      })
+
+      if (fieldValues === values) {
+        return Object.values(temp).every(x => x === '');
+      }
+
+      return false;
+    }
+
+    const { 
+      values,
+      errors,
+      setErrors,
+      handleInputChange,
+      resetForm,
+    } = useForm({
+      initialErrorValues,
+      initialFormValues,
+      validate,
+    });
+
+    const onSubmit = (event: React.SyntheticEvent) => {
       event.preventDefault();
-      login(email, password);
+      if (validate()) {
+        setLoadingStatus(true);
+        login(values.email, values.password);
+      }
     };
 
     if (isUserAuthorized) {
@@ -67,52 +123,50 @@ const Login = observer(
             <Typography component="h1" variant="h5">
               Авторизация
             </Typography>
-            <form className={classes.form} noValidate onSubmit={formSubmit}>
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="Электронная почта"
-                name="email"
-                autoComplete="email"
-                autoFocus
-                onChange={(event) => setEmail(event.target.value)}
-              />
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Пароль"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                onChange={(event) => setPassword(event.target.value)}
-              />
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                className={classes.submit}
-              >
-                Войти
-              </Button>
-              <Grid container>
-                <Grid item xs>
-                  <MuiLink component={Link} to="#" variant="body2">
-                  </MuiLink>
-                </Grid>
-                <Grid item>
-                  <MuiLink component={Link} to="/auth/registration" variant="body2">
-                    Регистрация
-                  </MuiLink>
+            <Form onSubmit={onSubmit}>
+              <Grid>
+                <TextField 
+                  variant='outlined'
+                  name='email'
+                  label='Электронная почта *'
+                  value={values.email}
+                  type='email'
+                  onChange={handleInputChange}
+                  error={!!errors.email}
+                  helperText={errors.email}
+                />
+                <TextField 
+                  variant='outlined'
+                  name='password'
+                  label='Пароль *'
+                  value={values.password}
+                  type='password'
+                  onChange={handleInputChange}
+                  error={!!errors.password}
+                  helperText={errors.password}
+                />
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  className={classes.submit}
+                >
+                  Войти
+                </Button>
+                <Grid container>
+                  <Grid item xs>
+                    <MuiLink component={Link} to="#" variant="body2">
+                    </MuiLink>
+                  </Grid>
+                  <Grid item>
+                    <MuiLink component={Link} to="/auth/registration" variant="body2">
+                      Регистрация
+                    </MuiLink>
+                  </Grid>
                 </Grid>
               </Grid>
-            </form>
+            </Form>
           </div>
         </Container>
       </Box>

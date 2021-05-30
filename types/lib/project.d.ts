@@ -1,4 +1,5 @@
 import * as Sequelize from 'sequelize';
+import { UserDTO } from './user';
 
 export interface ProjectAttributes {
   id: string;
@@ -9,7 +10,7 @@ export interface ProjectAttributes {
   dateEnd: Date;
   controlPoints: string;
   result: string;
-  manager: string;
+  managerId: string;
 }
 
 export interface ProjectCreationAttributes
@@ -18,3 +19,8 @@ export interface ProjectCreationAttributes
 export interface ProjectInstance
   extends Sequelize.Model<ProjectAttributes, ProjectCreationAttributes>,
     ProjectAttributes {}
+
+export interface ProjectDTO extends ProjectAttributes {
+  manager: UserDTO;
+  team: UserDTO[];
+}

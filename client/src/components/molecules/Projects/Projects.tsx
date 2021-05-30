@@ -1,5 +1,5 @@
 import React from 'react'
-import { makeStyles, Table, TableBody, TableCell as MuiTableCell, TableContainer, TableHead, TableRow, withStyles, Theme, createStyles, Button } from '@material-ui/core'
+import { makeStyles, Table, TableBody, TableCell as MuiTableCell, TableContainer, TableHead, TableRow, withStyles, Theme, createStyles, Button, Typography } from '@material-ui/core'
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../../helpers/useStore';
 import { ProjectsContext } from '../../../stores/Projects';
@@ -27,6 +27,10 @@ const useStyles = makeStyles({
   },
   tableRow: {
     textDecoration: 'none',
+  },
+  addButton: {
+    color: 'white',
+    textDecoration: 'none'
   }
 });
 
@@ -49,12 +53,15 @@ const Projects = observer(() => {
       {isUserAuthorized &&
         <div style={{float: 'right'}}>
           <Button
-            href='/project/add'
             variant="contained" 
             color="primary"
             type="submit"
           >
-            Добавить проект
+            <Link to='/project/add' className={classes.addButton}>
+              <Typography>
+                Добавить проект
+              </Typography>
+            </Link>
           </Button>
         </div>
       }

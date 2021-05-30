@@ -3,7 +3,7 @@ import { Box, Button, Container, createStyles, makeStyles, Paper, Tab as MuiTab,
 import { observer } from 'mobx-react-lite'
 import { ProjectContext } from '../../../stores/Project';
 import { useStore } from '../../../helpers/useStore';
-import { UserAttributes, VacancyAttributes } from 'diploma';
+import { UserAttributes, VacancyAttributes, VacancyDTO } from 'diploma';
 import { AuthenticationContext } from '../../../stores/Authentication';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
@@ -167,13 +167,13 @@ const Project = observer(() => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {projectVacancies && projectVacancies.map((vacancy: VacancyAttributes) => (
+                {projectVacancies && projectVacancies.map((vacancy: VacancyDTO) => (
                   <TableRow key={vacancy.id} className={classes.tableRow}>
                     <TableCell align="center">{vacancy.role}</TableCell>
-                    <TableCell align="center">{vacancy.number}</TableCell>
+                    <TableCell align="center">{vacancy.currentNumber}/{vacancy.number}</TableCell>
                     <TableCell align="center">{vacancy.requirements}</TableCell>
                     <TableCell align="center">
-                    {isUserAuthorized && project.team.filter(tm => tm.id === userData?.id).length === 0 &&
+                    {isUserAuthorized &&
                       <Button
                         onClick={() => addUserToProjectVacancy(vacancy.id)}
                         variant="contained" 

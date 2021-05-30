@@ -1,12 +1,12 @@
-import { ProjectCreationAttributes } from "diploma";
+import { ProjectCreationAttributes, ProjectDTO } from "diploma";
 import { makeAutoObservable } from "mobx";
 import { axiosFetchFunction, axiosPostFunction } from "../../helpers/axiosInstance";
-import { ProjectCreatedResponse, ProjectResponse } from "./Projects.interface";
+import { ProjectCreatedResponse } from "./Projects.interface";
 
 export class ProjectsStore {
   public state: 'loading' | 'loaded' | 'error' = 'loading';
 
-  public projects: ProjectResponse[] | null = null;
+  public projects: ProjectDTO[] | null = null;
 
   constructor() {
     makeAutoObservable(this);
@@ -15,7 +15,7 @@ export class ProjectsStore {
 
   private fetchAllProjects = async (): Promise<void> => {
     try {
-      const projects: ProjectResponse[] = await axiosFetchFunction<ProjectResponse[]>('/projects');
+      const projects: ProjectDTO[] = await axiosFetchFunction<ProjectDTO[]>('/projects');
 
       this.projects = projects;
       this.state = 'loaded';
