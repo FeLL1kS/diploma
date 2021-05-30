@@ -1,11 +1,12 @@
 import React from 'react'
-import { makeStyles, Table, TableBody, TableCell as MuiTableCell, TableContainer, TableHead, TableRow, withStyles, Theme, createStyles, Button, Typography } from '@material-ui/core'
+import { makeStyles, Table, TableBody, TableCell as MuiTableCell, TableContainer, TableHead, TableRow, withStyles, Theme, createStyles, Button, Typography, Dialog, DialogTitle } from '@material-ui/core'
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../../helpers/useStore';
 import { ProjectsContext } from '../../../stores/Projects';
 import { Link } from 'react-router-dom';
 import { UserAttributes } from 'diploma';
 import { AuthenticationContext } from '../../../stores/Authentication';
+import AddProject from './AddProject';
 
 const TableCell = withStyles((theme: Theme) => 
   createStyles({
@@ -35,17 +36,24 @@ const useStyles = makeStyles({
 });
 
 const Projects = observer(() => {
+  const classes = useStyles();
+
   const { projects } = useStore(ProjectsContext);
   const { isUserAuthorized } = useStore(AuthenticationContext);
 
-  const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
+  
+  
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  
+  const handleClose = () => {
+    setOpen(false);
+  };
 
-  if (projects === null) {
-    return (
-      <div>
-        Еще не было создано ни одного проекта
-      </div>
-    )
+  const onFormSubmit = async (event: React.SyntheticEvent) => {
+    handleClose();
   }
 
   return (
@@ -56,13 +64,18 @@ const Projects = observer(() => {
             variant="contained" 
             color="primary"
             type="submit"
+            onClick={handleClickOpen}
           >
-            <Link to='/project/add' className={classes.addButton}>
-              <Typography>
-                Добавить проект
-              </Typography>
-            </Link>
+            <Typography>
+              Добавить проект
+            </Typography>
           </Button>
+          <Dialog open={open} onClose={handleClose}>
+            <DialogTitle>
+              Добавить проект
+            </DialogTitle>
+            <AddProject onSubmit={onFormSubmit} />
+          </Dialog>
         </div>
       }
       <TableContainer>
@@ -77,7 +90,7 @@ const Projects = observer(() => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {projects.map((project, idx) => (
+            {projects && projects.map((project, idx) => (
               <TableRow component={Link} to={project.id} key={project.id} className={classes.tableRow}>
                 <TableCell align="center">{idx}</TableCell>
                 <TableCell align="center">{project.title}</TableCell>

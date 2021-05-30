@@ -2,8 +2,14 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { observer } from 'mobx-react';
-import { Button, Container, Grid, TextField } from '@material-ui/core';
-import Form from '../Form';
+import { 
+  Button, 
+  Container, 
+  Grid, 
+  TextField, 
+  Typography
+} from '@material-ui/core';
+import Form from '../../molecules/Form';
 import { ProjectCreationAttributes } from 'diploma';
 import { useStore } from '../../../helpers/useStore';
 import { AuthenticationContext } from '../../../stores/Authentication';
@@ -11,11 +17,18 @@ import { ProjectsContext } from '../../../stores/Projects';
 import { useForm } from '../../../helpers/useForm';
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    textAlign: 'center',
+  },
   submit: {
     margin: theme.spacing(3, 0, 2),
     float: 'right'
   },
 }));
+
+interface AddProjectProps {
+  onSubmit: (event: React.SyntheticEvent) => Promise<void>;
+}
 
 interface IProjectCreationErrors {
   title: string;
@@ -40,11 +53,11 @@ const initialErrorValues: IProjectCreationErrors = {
 };
 
 const AddProject = observer(
-  (): JSX.Element => {
+  ({ onSubmit }: AddProjectProps): JSX.Element => {
     const classes = useStyles();
 
     const { userData } = useStore(AuthenticationContext);
-    const { createProject } = useStore(ProjectsContext);
+    const { createProject, errorMessage } = useStore(ProjectsContext);
 
     const initialFormValues: ProjectCreationAttributes = {
       title: '',
@@ -98,17 +111,24 @@ const AddProject = observer(
         validate,
       });
 
-    const onSubmit = (event: React.SyntheticEvent) => {
+    const onFormSubmit = async (event: React.SyntheticEvent): Promise<void> => {
       event.preventDefault();
-
+      
       if (validate()) {
-        createProject(values);
+        if (await createProject(values)) {
+          onSubmit(event);
+        };
       }
     }
 
     return (
-      <Container>
-        <Form onSubmit={onSubmit}>
+      <Container className={classes.root}>
+        {errorMessage &&
+          <Typography component="h2" variant="h6" style={{color: '#f44336'}} >
+            Ошибка: {errorMessage}
+          </Typography>
+        }
+        <Form onSubmit={onFormSubmit}>
           <Grid container>
             <TextField 
               variant='outlined'

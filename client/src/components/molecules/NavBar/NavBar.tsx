@@ -32,7 +32,6 @@ import Projects from '../../pages/Projects';
 import Project from '../../pages/Project';
 import Login from '../../pages/Login/Login';
 import Registration from '../../pages/Registration';
-import AddProject from '../AddProject';
 
 const drawerWidth = 240;
 
@@ -218,7 +217,6 @@ const NavBar = ({ userData, isUserAuthorized, logout }: NavBarProps) => {
         <Route exact path='/auth/login' component={Login} />
         <Route exact path='/auth/registration' component={Registration} />
         <Route exact path='/' component={Projects} />
-        <Route exact path='/project/add' component={AddProject} />
         <Route exact path='/:id' component={Project} />
       </main>
     </div>

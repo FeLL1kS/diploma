@@ -62,7 +62,7 @@ const Login = observer(
   (): JSX.Element => {
     const classes = useStyles();
 
-    const { login, isUserAuthorized } = useStore(AuthenticationContext);
+    const { login, isUserAuthorized, errorMessage } = useStore(AuthenticationContext);
 
     const [isLoading, setLoadingStatus] = useState(false);
 
@@ -108,7 +108,7 @@ const Login = observer(
       return <Redirect to="/" />;
     }
 
-    if (isLoading) {
+    if (isLoading && !errorMessage) {
       return <Loading />;
     }
 
@@ -122,6 +122,11 @@ const Login = observer(
             <Typography component="h1" variant="h5">
               Авторизация
             </Typography>
+            {errorMessage &&
+              <Typography component="h2" variant="h6" style={{color: '#f44336'}} >
+                Ошибка: {errorMessage}
+              </Typography>
+            }
             <Form onSubmit={onSubmit}>
               <Grid>
                 <TextField 

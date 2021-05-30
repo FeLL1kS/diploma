@@ -1,7 +1,7 @@
-import { ProjectDTO, VacancyDTO } from "diploma";
+import { ErrorResponse, ProjectDTO, VacancyDTO, VacancyUserDTO } from "diploma";
 import { makeAutoObservable } from "mobx";
-import { axiosFetchFunction, axiosPostFunction } from "../../helpers/axiosInstance";
-import { VacancyUserCreatedResponse } from "./Project.interface";
+import { HttpStatusCode } from "../../enums";
+import { axiosFetchFunction, axiosPostFunction, IResponse } from "../../helpers/axiosInstance";
 
 export class ProjectStore {
   public state: 'loading' | 'loaded' | 'error' = 'loading';
@@ -17,14 +17,36 @@ export class ProjectStore {
   constructor() {
     makeAutoObservable(this);
   }
+  
+  public setProjectId = async (id: string): Promise<void> => {
+    this.id = id;
+    await this.fetchData();
+  }
+
+  public setErrorMessage = (message: string | null): void => {
+    this.errorMessage = message;
+  }
 
   private fetchData = async (): Promise<void> => {
     try {
-      const project: ProjectDTO = await axiosFetchFunction(`/projects/${this.id}`);
-      this.project = project;
+      this.setErrorMessage(null);
+      const projectResponse: IResponse<ProjectDTO> | ErrorResponse = await axiosFetchFunction(`/projects/${this.id}`);
+      
+      if (projectResponse.status !== HttpStatusCode.OK) {
+        this.setErrorMessage((projectResponse as ErrorResponse).message);
+        return;
+      }
+      
+      this.project = (projectResponse as IResponse<ProjectDTO>).data;
 
-      const projectVacancies: VacancyDTO[] = await axiosFetchFunction(`/projects/${this.id}/vacancies`);
-      this.projectVacancies = projectVacancies;
+      const projectVacanciesResponse: IResponse<VacancyDTO[]> | ErrorResponse = await axiosFetchFunction(`/projects/${this.id}/vacancies`);
+      
+      if (projectVacanciesResponse.status !== HttpStatusCode.OK) {
+        this.setErrorMessage((projectVacanciesResponse as ErrorResponse).message);
+        return;
+      }
+      
+      this.projectVacancies = (projectVacanciesResponse as IResponse<VacancyDTO[]>).data;
       
       this.state = 'loaded';
     } catch {
@@ -34,17 +56,23 @@ export class ProjectStore {
 
   public addUserToProjectVacancy = async (vacancyId: string): Promise<void> => {
     try {
+      this.setErrorMessage(null);
       if (!this.project)
       {
         return;
       }
     
-      const response: VacancyUserCreatedResponse = await axiosPostFunction(`/projects/vacancies/${vacancyId}/addUser`);
+      const response: IResponse<VacancyUserDTO> | ErrorResponse = await axiosPostFunction(`/projects/vacancies/${vacancyId}/addUser`);
       
-      this.project.team.push(response.vacancyUser.user);
+      if (response.status !== HttpStatusCode.OK) {
+        this.setErrorMessage((response as ErrorResponse).message);
+        return;
+      }
+      
+      this.project.team.push((response as IResponse<VacancyUserDTO>).data.user);
 
       this.projectVacancies = this.projectVacancies!.map((vacancy: VacancyDTO) => {
-        if (vacancy.id === response.vacancyUser.vacancyId) {
+        if (vacancy.id === (response as IResponse<VacancyUserDTO>).data.vacancyId) {
           vacancy.currentNumber++;
         }
 
@@ -53,10 +81,5 @@ export class ProjectStore {
     } catch {
       this.state = 'error';
     }
-  }
-
-  public setProjectId = async (id: string): Promise<void> => {
-    this.id = id;
-    await this.fetchData();
   }
 }

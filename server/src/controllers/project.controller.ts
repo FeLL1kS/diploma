@@ -79,22 +79,14 @@ async function GetOneByCondition(options: Sequelize.FindOptions<ProjectAttribute
   return project;
 }
 
-async function Create(project: ProjectCreationAttributes): Promise<ProjectDTO> {
-  const projectInstance: ProjectInstance = await ProjectModel.create(project, {
-    include: [{
-      model: UserModel,
-      as: 'manager',
-      include: [{
-        model: DepartmentModel,
-        as: 'department',
-      }, {
-        model: RoleModel,
-        as: 'role',
-      }],
-    }],
-  });
+async function Create(project: ProjectCreationAttributes): Promise<ProjectDTO | null> {
+  const createResult: ProjectInstance = await ProjectModel.create(project);
 
-  const result: ProjectDTO = await GetProjectDTOFromProjectInstance(projectInstance);
+  const result: ProjectDTO | null = await GetOneByCondition({
+    where: {
+      id: createResult.id
+    },
+  });
 
   return result;
 }

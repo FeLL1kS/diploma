@@ -50,7 +50,7 @@ projectsRouter.get(
       });
 
       if (project === null) {
-        return res.json({
+        return res.status(404).json({
           message: `Project with id ${id} not found`,
         });
       }
@@ -105,17 +105,20 @@ projectsRouter.post(
       if (!errors.isEmpty()) {
         return res
           .status(400)
-          .json({ message: 'Incorrect request', ...errors });
+          .json({ message: 'Неверный запрос', ...errors });
       }
 
       const data: ProjectCreationAttributes = req.body;
 
-      const project: ProjectDTO = await ProjectController.Create(data);
+      const project: ProjectDTO | null = await ProjectController.Create(data);
 
-      res.json({
-        message: 'Project was created',
-        project,
-      });
+      if (!project) {
+        res.status(400).json({
+          message: 'Неверный запрос'
+        })
+      }
+
+      res.json(project);
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Server Error' });
@@ -140,7 +143,7 @@ projectsRouter.post(
       if (!errors.isEmpty()) {
         return res
           .status(400)
-          .json({ message: 'Incorrect request', ...errors });
+          .json({ message: 'Неверный запрос', ...errors });
       }
 
       const data: VacancyCreationAttributes = req.body;
@@ -149,10 +152,7 @@ projectsRouter.post(
 
       const vacancy: VacancyDTO = await VacancyController.Create(data);
 
-      res.json({
-        message: 'Vacancy was created',
-        vacancy,
-      });
+      res.json(vacancy);
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Server Error' });
@@ -181,10 +181,7 @@ projectsRouter.post(
         });
       }
 
-      res.json({
-        message: 'A user has been added to the vacancy',
-        vacancyUser,
-      });
+      res.json(vacancyUser);
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Server Error' });
@@ -214,7 +211,7 @@ projectsRouter.put(
       if (!errors.isEmpty()) {
         return res
           .status(400)
-          .json({ message: 'Incorrect request', ...errors });
+          .json({ message: 'Неверный запрос', ...errors });
       }
 
       const data: ProjectCreationAttributes = req.body;
@@ -222,15 +219,12 @@ projectsRouter.put(
       const project: ProjectAttributes | null = await ProjectController.Update(data);
 
       if (project === null) {
-        res.json({
-          message: 'Something went wrong',
+        res.status(404).json({
+          message: 'The project was not found',
         });
       }
 
-      res.json({
-        message: 'Project was updated',
-        project,
-      });
+      res.json(project);
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Server Error' });
@@ -251,14 +245,12 @@ projectsRouter.delete(
       const result: boolean = await ProjectController.DeleteById(id);
 
       if (!result) {
-        res.json({
+        res.status(404).json({
           message: `Project with id ${id} not found`,
         });
       }
 
-      res.json({
-        message: 'Project was deleted',
-      });
+      res.json({});
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Server Error' });

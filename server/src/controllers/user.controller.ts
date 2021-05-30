@@ -20,27 +20,27 @@ function GetUserDTOFromUserInstance(userInstance: UserInstance): UserDTO {
   return user;
 }
 
-async function GetOneByCondition(options: Sequelize.FindOptions<UserAttributes>):
-Promise<UserDTO | null> {
-  const userInstance: UserInstance | null = await UserModel.findOne({
-    ...options,
-    include: [{
-      model: DepartmentModel,
-      as: 'department',
-    }, {
-      model: RoleModel,
-      as: 'role',
-    }],
-  });
+async function GetOneByCondition(options: Sequelize.FindOptions<UserAttributes>)
+  : Promise<UserDTO | null> {
+    const userInstance: UserInstance | null = await UserModel.findOne({
+      ...options,
+      include: [{
+        model: DepartmentModel,
+        as: 'department',
+      }, {
+        model: RoleModel,
+        as: 'role',
+      }],
+    });
 
-  if (!userInstance) {
-    return null;
+    if (!userInstance) {
+      return null;
+    }
+
+    const result: UserDTO = GetUserDTOFromUserInstance(userInstance);
+
+    return result;
   }
-
-  const result: UserDTO = GetUserDTOFromUserInstance(userInstance);
-
-  return result;
-}
 
 const GetTeamByProjectId = async (projectId: string): Promise<UserDTO[]> => {
   const vacancies: VacancyDTO[] = await VacancyController.GetAllByCondition({

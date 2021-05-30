@@ -70,9 +70,10 @@ const initialErrorValues: IUserCreationErrors = {
 
 const Registration = observer(
   (): JSX.Element => {
-    const { register, isUserAuthorized } = useStore(AuthenticationContext);
     const classes = useStyles();
 
+    const { register, isUserAuthorized, errorMessage } = useStore(AuthenticationContext);
+    
     const { departments } = useStore(DepartmentsContext);
 
     const [isLoading, setLoadingStatus] = useState(false);
@@ -126,7 +127,7 @@ const Registration = observer(
       return <Redirect to="/" />;
     }
 
-    if (isLoading) {
+    if (isLoading && !errorMessage) {
       return <Loading />;
     }
 
@@ -140,6 +141,11 @@ const Registration = observer(
             <Typography component="h1" variant="h5">
               Регистрация
             </Typography>
+            {errorMessage &&
+              <Typography component="h2" variant="h6" style={{color: '#f44336'}} >
+                Ошибка: {errorMessage}
+              </Typography>
+            }
             <Form onSubmit={handleSubmit}>
               <Grid container>
                 <Grid item xs={12}>

@@ -43,7 +43,7 @@ async function GetAllByCondition(options: Sequelize.FindOptions<VacancyAttribute
   );
 
   return result;
-}
+  }
 
 async function GetOneByCondition(options: Sequelize.FindOptions<VacancyAttributes>)
   : Promise<VacancyDTO | null> {
@@ -73,7 +73,7 @@ async function GetOneByCondition(options: Sequelize.FindOptions<VacancyAttribute
   const result: VacancyDTO = GetVacancyDTOFromVacancyInstance(vacancyInstance);
 
   return result;
-}
+  }
 
 async function Create(vacancy: VacancyCreationAttributes): Promise<VacancyDTO> {
   const vacancyInstance: VacancyInstance = await VacancyModel.create(vacancy, {
