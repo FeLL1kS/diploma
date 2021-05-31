@@ -1,5 +1,4 @@
 import {
-  ProjectAttributes,
   ProjectCreationAttributes,
   ProjectDTO,
   UserDTO,
@@ -15,7 +14,6 @@ import {
   validationResult,
 } from 'express-validator';
 import ProjectController from '../controllers/project.controller';
-import UserController from '../controllers/user.controller';
 import VacancyController from '../controllers/vacancy.controller.';
 import vacancyuserController from '../controllers/vacancyuser.controller';
 import authMiddleware from '../middlewares/auth.middleware';
@@ -116,8 +114,8 @@ projectsRouter.post(
 
       if (!project) {
         res.status(400).json({
-          message: 'Неверный запрос'
-        })
+          message: 'Неверный запрос',
+        });
       }
 
       res.json(project);
@@ -189,7 +187,7 @@ projectsRouter.post(
     authMiddleware,
   ],
   async (
-    req: express.Request<{ 
+    req: express.Request<{
       projectId: string;
       vacancyId: string;
     }>,
@@ -202,7 +200,7 @@ projectsRouter.post(
         },
       });
 
-      if (!!project?.team.filter((user: UserDTO) => user.id === req.body.user.id).length) {
+      if (project?.team.filter((user: UserDTO) => user.id === req.body.user.id).length) {
         return res
           .status(403)
           .json({ message: 'Пользователь уже находится в проекте на другой вакансии' });
@@ -250,9 +248,8 @@ projectsRouter.put(
           .json({ message: 'Неверный запрос', ...errors });
       }
 
-      
       const data: ProjectCreationAttributes = req.body;
-      
+
       if (data.managerId !== req.body.user.id) {
         return res
           .status(400)
@@ -304,7 +301,7 @@ projectsRouter.delete(
       }
 
       await ProjectController.DeleteById(id);
-      
+
       res.json({});
     } catch (error) {
       console.error(error);

@@ -45,8 +45,8 @@ async function GetAll(options?: Sequelize.FindOptions<ProjectAttributes>): Promi
       }],
     }],
     order: [
-      ['createdAt', 'ASC']
-    ]
+      ['createdAt', 'ASC'],
+    ],
   });
 
   const resultProjects: ProjectDTO[] = await Promise.all(
@@ -87,7 +87,7 @@ async function Create(project: ProjectCreationAttributes): Promise<ProjectDTO | 
 
   const result: ProjectDTO | null = await GetOneByCondition({
     where: {
-      id: createResult.id
+      id: createResult.id,
     },
   });
 
@@ -106,8 +106,8 @@ async function Update(project: ProjectCreationAttributes): Promise<ProjectDTO | 
 
   const result: ProjectDTO | null = await GetOneByCondition({
     where: {
-      id: updateResult[1][0].id
-    }
+      id: updateResult[1][0].id,
+    },
   });
 
   return result;

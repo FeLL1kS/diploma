@@ -64,7 +64,7 @@ async function GetAllByCondition(options: Sequelize.FindOptions<VacancyUserAttri
   );
 
   return result;
-  }
+}
 
 async function Create(vacancyUser: VacancyUserCreationAttributes): Promise<VacancyUserDTO | null> {
   const { vacancyId } = vacancyUser;

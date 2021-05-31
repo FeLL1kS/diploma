@@ -44,7 +44,8 @@
       "react-app/jest"
     ],
     "rules": {
-      "no-mixed-operators": 0
+      "no-mixed-operators": 0,
+      "react-hooks/exhaustive-deps": 0
     }
   },
   "browserslist": {

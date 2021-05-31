@@ -26,7 +26,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { observer } from 'mobx-react-lite'
 import { ProjectContext } from '../../../stores/Project';
 import { useStore } from '../../../helpers/useStore';
-import { ProjectCreationAttributes, UserAttributes, VacancyDTO } from 'diploma';
+import { UserAttributes, VacancyDTO } from 'diploma';
 import { AuthenticationContext } from '../../../stores/Authentication';
 import AddVacancy from './AddVacancy';
 import { useSnackbar } from 'notistack';

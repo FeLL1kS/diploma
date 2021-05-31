@@ -12,8 +12,7 @@ import Form from '../../molecules/Form';
 import { ProjectCreationAttributes, ProjectDTO } from 'diploma';
 import { useForm } from '../../../helpers/useForm';
 import { useSnackbar } from 'notistack';
-import { DatePicker, KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
-import DateFnsUtils from '@date-io/date-fns';
+import { DatePicker } from '@material-ui/pickers';
 
 const useStyles = makeStyles((theme) => ({
   root: {
