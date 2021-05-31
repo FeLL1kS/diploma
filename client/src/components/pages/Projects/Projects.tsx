@@ -1,5 +1,17 @@
-import React from 'react'
-import { makeStyles, Table, TableBody, TableCell as MuiTableCell, TableContainer, TableHead, TableRow, withStyles, Theme, createStyles, Button, Typography, Dialog, DialogTitle } from '@material-ui/core'
+import React, { useState } from 'react'
+import { 
+  makeStyles,
+  Table,
+  TableBody,
+  TableCell as MuiTableCell,
+  TableContainer, TableHead,
+  TableRow,
+  withStyles,
+  Theme,
+  createStyles,
+  Button,
+  Typography,
+} from '@material-ui/core'
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../../helpers/useStore';
 import { ProjectsContext } from '../../../stores/Projects';
@@ -7,7 +19,7 @@ import { Link } from 'react-router-dom';
 import { UserAttributes } from 'diploma';
 import { AuthenticationContext } from '../../../stores/Authentication';
 import AddProject from './AddProject';
-import { useSnackbar } from 'notistack';
+import Popup from '../../molecules/Popup';
 
 const TableCell = withStyles((theme: Theme) => 
   createStyles({
@@ -39,12 +51,10 @@ const useStyles = makeStyles({
 const Projects = observer(() => {
   const classes = useStyles();
 
-  const { enqueueSnackbar } = useSnackbar();
-  
-  const { projects, getErrorMessage } = useStore(ProjectsContext);
+  const { projects, createProject, getErrorMessage } = useStore(ProjectsContext);
   const { isUserAuthorized } = useStore(AuthenticationContext);
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   
   const handleClickOpen = () => {
     setOpen(true);
@@ -53,15 +63,6 @@ const Projects = observer(() => {
   const handleClose = () => {
     setOpen(false);
   };
-
-  const onFormSubmit = async (event: React.SyntheticEvent) => {
-    handleClose();
-  }
-
-  const errorMessage: string | null = getErrorMessage();
-  if (errorMessage) {
-    enqueueSnackbar(`Ошибка: ${errorMessage}`, { variant: 'error' });
-  }
 
   return (
     <div>
@@ -77,12 +78,17 @@ const Projects = observer(() => {
               Добавить проект
             </Typography>
           </Button>
-          <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>
-              Добавить проект
-            </DialogTitle>
-            <AddProject onSubmit={onFormSubmit} />
-          </Dialog>
+          <Popup
+            title='Добавить проект'
+            open={open}
+            handlePopupClose={handleClose}
+          >
+            <AddProject 
+              onSubmit={createProject}
+              getErrorMessage={getErrorMessage}
+              handlePopupClose={handleClose}
+            />
+          </Popup>
         </div>
       }
       <TableContainer>

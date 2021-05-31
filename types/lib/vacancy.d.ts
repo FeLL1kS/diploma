@@ -5,13 +5,13 @@ export interface VacancyAttributes {
   id: string;
   projectId: string;
   role: string;
-  number: number;
-  currentNumber: number;
+  number: string;
+  currentNumber: string;
   requirements: string;
 }
 
 export interface VacancyCreationAttributes
-  extends Sequelize.Optional<VacancyAttributes, 'requirements' | 'number' | 'currentNumber'> {}
+  extends Sequelize.Optional<VacancyAttributes, 'id' | 'projectId' | 'number' | 'currentNumber' | 'requirements'> {}
 
 export interface VacancyInstance
   extends Sequelize.Model<VacancyAttributes, VacancyCreationAttributes>,

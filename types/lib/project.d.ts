@@ -14,7 +14,7 @@ export interface ProjectAttributes {
 }
 
 export interface ProjectCreationAttributes
-  extends Sequelize.Optional<ProjectAttributes, 'id' | 'controlPoints' | 'result'> {}
+  extends Sequelize.Optional<ProjectAttributes, 'id' | 'controlPoints' | 'result' | 'managerId'> {}
 
 export interface ProjectInstance
   extends Sequelize.Model<ProjectAttributes, ProjectCreationAttributes>,

@@ -26,10 +26,12 @@ const ProjectModel: Sequelize.ModelCtor<ProjectInstance> = SequelizeInstance.get
     dateBegin: {
       allowNull: false,
       type: Sequelize.DATE,
+      defaultValue: Sequelize.NOW,
     },
     dateEnd: {
       allowNull: false,
       type: Sequelize.DATE,
+      defaultValue: Sequelize.NOW,
     },
     controlPoints: {
       type: Sequelize.TEXT,
@@ -50,6 +52,7 @@ const ProjectModel: Sequelize.ModelCtor<ProjectInstance> = SequelizeInstance.get
 ProjectModel.belongsTo(UserModel, {
   as: 'manager',
   foreignKey: 'managerId',
+  onDelete: 'CASCADE',
 });
 
 export default ProjectModel;

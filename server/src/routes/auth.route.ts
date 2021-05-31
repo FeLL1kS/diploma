@@ -8,7 +8,7 @@ import {
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-import { UserAttributes, UserCreationAttributes } from 'diploma';
+import { UserAttributes, UserCreationAttributes, UserDTO } from 'diploma';
 import authMiddleware from '../middlewares/auth.middleware';
 import UserController from '../controllers/user.controller';
 
@@ -134,7 +134,7 @@ authRouter.get(
   authMiddleware,
   async (req: express.Request, res: express.Response) => {
     try {
-      const user: UserAttributes | null = await UserController.GetOneByCondition({
+      const user: UserDTO | null = await UserController.GetOneByCondition({
         where: {
           id: req.body.user.id,
         },
@@ -157,6 +157,7 @@ authRouter.get(
           email: user.mail,
           firstName: user.firstName,
           lastName: user.lastName,
+          role: user.role.roleName,
         },
       });
     } catch (error) {

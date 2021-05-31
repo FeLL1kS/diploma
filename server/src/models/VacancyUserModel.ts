@@ -34,6 +34,7 @@ VacancyUserModel.removeAttribute('id');
 VacancyUserModel.belongsTo(VacancyModel, {
   as: 'vacancy',
   foreignKey: 'vacancyId',
+  onDelete: 'CASCADE',
 });
 
 VacancyUserModel.belongsTo(UserModel, {

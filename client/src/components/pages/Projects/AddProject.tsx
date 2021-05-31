@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { observer } from 'mobx-react';
@@ -7,15 +7,13 @@ import {
   Container, 
   Grid, 
   TextField, 
-  Typography
 } from '@material-ui/core';
 import Form from '../../molecules/Form';
-import { ProjectCreationAttributes } from 'diploma';
-import { useStore } from '../../../helpers/useStore';
-import { AuthenticationContext } from '../../../stores/Authentication';
-import { ProjectsContext } from '../../../stores/Projects';
+import { ProjectCreationAttributes, ProjectDTO } from 'diploma';
 import { useForm } from '../../../helpers/useForm';
 import { useSnackbar } from 'notistack';
+import { DatePicker, KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -27,8 +25,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface AddProjectProps {
-  onSubmit: (event: React.SyntheticEvent) => Promise<void>;
+interface AddProjectProps<T> {
+  project?: ProjectDTO,
+  handlePopupClose: () => void;
+  getErrorMessage: () => string | null;
+  onSubmit: (values: T) => Promise<void>;
 }
 
 interface IProjectCreationErrors {
@@ -53,25 +54,27 @@ const initialErrorValues: IProjectCreationErrors = {
   managerId: '',
 };
 
+const initialFormValues: ProjectCreationAttributes = {
+  id: '',
+  title: '',
+  description: '',
+  customer: '',
+  dateBegin: new Date(),
+  dateEnd: new Date(),
+  controlPoints: '',
+  result: '',
+};
+
 const AddProject = observer(
-  ({ onSubmit }: AddProjectProps): JSX.Element => {
+  ({ 
+    project,
+    getErrorMessage,
+    onSubmit,
+    handlePopupClose 
+  }: AddProjectProps<ProjectCreationAttributes>): JSX.Element => {
     const classes = useStyles();
 
     const { enqueueSnackbar } = useSnackbar();
-
-    const { userData } = useStore(AuthenticationContext);
-    const { createProject, getErrorMessage } = useStore(ProjectsContext);
-
-    const initialFormValues: ProjectCreationAttributes = {
-      title: '',
-      description: '',
-      customer: '',
-      dateBegin: new Date(),
-      dateEnd: new Date(),
-      controlPoints: '',
-      result: '',
-      managerId: userData ? userData.id : '',
-    };
 
     const validate = (): boolean => {
       const fieldValues: ProjectCreationAttributes = values;
@@ -104,6 +107,7 @@ const AddProject = observer(
 
     const {
       values,
+      setValues,
       errors,
       setErrors,
       handleInputChange,
@@ -114,21 +118,56 @@ const AddProject = observer(
         validate,
       });
 
+    useEffect(() => {
+      if (project) {
+        setValues({
+          ...project,
+        });
+      }
+    }, [project]);
+
+    const reset = (): void => {
+      if (project) {
+        setValues({
+          ...project,
+        });
+        return;
+      }
+      
+      resetForm();
+    }
+
     const onFormSubmit = async (event: React.SyntheticEvent): Promise<void> => {
       event.preventDefault();
       
       if (validate()) {
-        const createResult: boolean = await createProject(values);
+        await onSubmit(values);
 
-        if (!createResult) {
-          const errorMessage: string | null = getErrorMessage();
-          if (errorMessage) {
-            enqueueSnackbar(`Ошибка: ${errorMessage}`, { variant: 'error' });
-          }
+        const errorMessage: string | null = getErrorMessage();
+        if (errorMessage) {
+          enqueueSnackbar(`Ошибка: ${errorMessage}`, { variant: 'error' });
           return;
         }
+        
+        handlePopupClose();
+      }
+    }
 
-        onSubmit(event);
+    const handleDateBeginChange = (date: Date | null): void => {
+      if (date) {
+        setValues({
+          ...values,
+          dateBegin: date
+        })
+      }
+    }
+
+    const handleDateEndChange = (date: Date | null): void => {
+      if (date) {
+        setValues({
+          ...values,
+          dateEnd: date
+        })
       }
     }
 
@@ -166,29 +205,27 @@ const AddProject = observer(
               error={!!errors.customer}
               helperText={errors.customer}
             />
-            <TextField
-              variant='outlined'
+            <DatePicker
               name='dateBegin'
-              label='День начала *'
-              type='date'
+              animateYearScrolling
+              variant="inline"
+              format="dd/MM/yyyy"
+              margin="normal"
+              label="День начала *"
               value={values.dateBegin}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              onChange={handleInputChange}
+              onChange={handleDateBeginChange}
               error={!!errors.dateBegin}
               helperText={errors.dateBegin}
             />
-            <TextField
-              variant='outlined'
+            <DatePicker
               name='dateEnd'
-              label='День окончания *'
-              type='date'
+              animateYearScrolling
+              variant="inline"
+              format="dd/MM/yyyy"
+              margin="normal"
+              label="День окончания *"
               value={values.dateEnd}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              onChange={handleInputChange}
+              onChange={handleDateEndChange}
               error={!!errors.dateEnd}
               helperText={errors.dateEnd}
             />
@@ -204,6 +241,20 @@ const AddProject = observer(
               rows={5}
               rowsMax={10}
             />
+            {project &&
+              <TextField 
+                variant='outlined'
+                name='result'
+                label='Результат *'
+                value={values.result}
+                onChange={handleInputChange}
+                error={!!errors.result}
+                helperText={errors.result}
+                multiline
+                rows={5}
+                rowsMax={10}
+              />
+            }
             <div className={classes.submit}>
               <Button
                 variant='contained'
@@ -216,7 +267,7 @@ const AddProject = observer(
             <Button
               variant='contained'
               color='secondary'
-              onClick={resetForm}
+              onClick={reset}
             >
               Reset
             </Button>

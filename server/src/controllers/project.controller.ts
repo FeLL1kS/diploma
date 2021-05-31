@@ -104,7 +104,11 @@ async function Update(project: ProjectCreationAttributes): Promise<ProjectDTO | 
     return null;
   }
 
-  const result: ProjectDTO = await GetProjectDTOFromProjectInstance(updateResult[1][0]);
+  const result: ProjectDTO | null = await GetOneByCondition({
+    where: {
+      id: updateResult[1][0].id
+    }
+  });
 
   return result;
 }

@@ -25,20 +25,19 @@ export class ProjectsStore {
     return errorMessage;
   }
 
-  public createProject = async (project: ProjectCreationAttributes): Promise<boolean> => {
+  public createProject = async (project: ProjectCreationAttributes) => {
     try {
       const response: IResponse<ProjectDTO> | ErrorResponse = await axiosPostFunction('/projects', project);
       
       if (response.status !== HttpStatusCode.OK) {
         this.setErrorMessage((response as ErrorResponse).message);
-        return false;
+        return;
       }
       
       this.projects?.push((response as IResponse<ProjectDTO>).data);
     } catch {
       this.state = 'error';
     }
-    return true;
   }
 
   private fetchAllProjects = async (): Promise<void> => {

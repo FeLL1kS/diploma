@@ -41,6 +41,7 @@ const VacancyModel: Sequelize.ModelCtor<VacancyInstance> = SequelizeInstance.get
 VacancyModel.belongsTo(ProjectModel, {
   as: 'project',
   foreignKey: 'projectId',
+  onDelete: 'CASCADE',
 });
 
 export default VacancyModel;

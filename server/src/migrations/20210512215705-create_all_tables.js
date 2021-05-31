@@ -209,10 +209,12 @@ module.exports = {
       dateBegin: {
         allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
       },
       dateEnd: {
         allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
       },
       controlPoints: {
         type: Sequelize.TEXT,
@@ -249,6 +251,7 @@ module.exports = {
       projectId: {
         allowNull: false,
         type: Sequelize.UUID,
+        onDelete: 'CASCADE',
         references: {
           model: 'projects',
           key: 'id',
@@ -287,6 +290,7 @@ module.exports = {
       vacancyId: {
         allowNull: false,
         type: Sequelize.UUID,
+        onDelete: 'CASCADE',
         references: {
           model: 'vacancies',
           key: 'id',

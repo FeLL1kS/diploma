@@ -18,6 +18,7 @@ import { DepartmentAttributes, UserCreationAttributes } from 'diploma';
 import Form from '../../molecules/Form';
 import { DepartmentsContext } from '../../../stores/Departments';
 import { useSnackbar } from 'notistack';
+import { DatePicker } from '@material-ui/pickers';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -107,6 +108,7 @@ const Registration = observer(
   
     const {
       values,
+      setValues,
       errors,
       setErrors,
       handleInputChange,
@@ -129,6 +131,15 @@ const Registration = observer(
         }
       }
     };
+
+    const handleDateBirthChange = (date: Date | null): void => {
+      if (date) {
+        setValues({
+          ...values,
+          dateBirth: date
+        })
+      }
+    }
 
     if (isUserAuthorized) {
       return <Redirect to="/" />;
@@ -176,16 +187,15 @@ const Registration = observer(
                     value={values.patronymic}
                     onChange={handleInputChange}
                   />
-                  <TextField 
-                    variant='outlined'
-                    name='dateBirth'
-                    label='День рождения'
-                    type="date"
+                  <DatePicker
+                    name='dateBegin'
+                    animateYearScrolling
+                    variant="inline"
+                    format="dd/MM/yyyy"
+                    margin="normal"
+                    label="День рождения"
                     value={values.dateBirth}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    onChange={handleInputChange}
+                    onChange={handleDateBirthChange}
                   />
                   <TextField 
                     variant='outlined'
