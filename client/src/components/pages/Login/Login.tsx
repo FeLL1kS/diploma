@@ -12,6 +12,7 @@ import { Box, Grid, Link as MuiLink } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import Form from '../../molecules/Form';
 import { useForm } from '../../../helpers/useForm';
+import { useSnackbar } from 'notistack';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -62,7 +63,9 @@ const Login = observer(
   (): JSX.Element => {
     const classes = useStyles();
 
-    const { login, isUserAuthorized, errorMessage } = useStore(AuthenticationContext);
+    const { enqueueSnackbar } = useSnackbar();
+
+    const { login, isUserAuthorized, getErrorMessage } = useStore(AuthenticationContext);
 
     const [isLoading, setLoadingStatus] = useState(false);
 
@@ -96,11 +99,16 @@ const Login = observer(
       validate,
     });
 
-    const onSubmit = (event: React.SyntheticEvent) => {
+    const onSubmit = async (event: React.SyntheticEvent): Promise<void> => {
       event.preventDefault();
       if (validate()) {
         setLoadingStatus(true);
-        login(values.email, values.password);
+        await login(values.email, values.password);
+        const errorMessage: string | null = getErrorMessage();
+        if (errorMessage) {
+          setLoadingStatus(false);
+          enqueueSnackbar(`Ошибка: ${errorMessage}`, { variant: 'error' });
+        }
       }
     };
 
@@ -108,7 +116,7 @@ const Login = observer(
       return <Redirect to="/" />;
     }
 
-    if (isLoading && !errorMessage) {
+    if (isLoading) {
       return <Loading />;
     }
 
@@ -122,11 +130,6 @@ const Login = observer(
             <Typography component="h1" variant="h5">
               Авторизация
             </Typography>
-            {errorMessage &&
-              <Typography component="h2" variant="h6" style={{color: '#f44336'}} >
-                Ошибка: {errorMessage}
-              </Typography>
-            }
             <Form onSubmit={onSubmit}>
               <Grid>
                 <TextField 

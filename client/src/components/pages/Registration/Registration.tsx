@@ -17,6 +17,7 @@ import { useForm } from '../../../helpers/useForm';
 import { DepartmentAttributes, UserCreationAttributes } from 'diploma';
 import Form from '../../molecules/Form';
 import { DepartmentsContext } from '../../../stores/Departments';
+import { useSnackbar } from 'notistack';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -72,7 +73,9 @@ const Registration = observer(
   (): JSX.Element => {
     const classes = useStyles();
 
-    const { register, isUserAuthorized, errorMessage } = useStore(AuthenticationContext);
+    const { enqueueSnackbar } = useSnackbar();
+
+    const { register, isUserAuthorized, getErrorMessage } = useStore(AuthenticationContext);
     
     const { departments } = useStore(DepartmentsContext);
 
@@ -114,12 +117,16 @@ const Registration = observer(
       validate
     });
   
-    const handleSubmit = (event: React.SyntheticEvent) => {
+    const handleSubmit = async (event: React.SyntheticEvent): Promise<void> => {
       event.preventDefault();
       if (validate()) {
         setLoadingStatus(true);
-        register(values);
-        resetForm();
+        await register(values);
+        const errorMessage: string | null = getErrorMessage();
+        if (errorMessage) {
+          setLoadingStatus(false);
+          enqueueSnackbar(`Ошибка: ${errorMessage}`, { variant: 'error' });
+        }
       }
     };
 
@@ -127,7 +134,7 @@ const Registration = observer(
       return <Redirect to="/" />;
     }
 
-    if (isLoading && !errorMessage) {
+    if (isLoading) {
       return <Loading />;
     }
 
@@ -141,11 +148,6 @@ const Registration = observer(
             <Typography component="h1" variant="h5">
               Регистрация
             </Typography>
-            {errorMessage &&
-              <Typography component="h2" variant="h6" style={{color: '#f44336'}} >
-                Ошибка: {errorMessage}
-              </Typography>
-            }
             <Form onSubmit={handleSubmit}>
               <Grid container>
                 <Grid item xs={12}>
@@ -236,6 +238,9 @@ const Registration = observer(
                     label='О себе'
                     value={values.aboutMe}
                     onChange={handleInputChange}
+                    multiline
+                    rows={5}
+                    rowsMax={10}
                   />
                   <Select
                     native
@@ -252,7 +257,7 @@ const Registration = observer(
                       "margin": "8px",
                     }}
                   >
-                    <option aria-label="None" value="" />
+                    <option aria-label="None" value="" >Выберите факультет</option>
                     {departments?.map((department: DepartmentAttributes) => {
                       return (
                         <option value={department.id}>{department.departmentName}</option>

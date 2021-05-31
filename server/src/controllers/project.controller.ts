@@ -44,6 +44,9 @@ async function GetAll(options?: Sequelize.FindOptions<ProjectAttributes>): Promi
         as: 'role',
       }],
     }],
+    order: [
+      ['createdAt', 'ASC']
+    ]
   });
 
   const resultProjects: ProjectDTO[] = await Promise.all(

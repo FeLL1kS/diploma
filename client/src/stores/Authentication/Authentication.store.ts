@@ -11,7 +11,7 @@ import { HttpStatusCode } from '../../enums';
 export class AuthenticationStore {
   public state: 'loading' | 'loaded' | 'error' = 'loading';
 
-  public errorMessage: string | null = null;
+  private errorMessage: string | null = null;
 
   public userData?: UserData;
 
@@ -24,7 +24,6 @@ export class AuthenticationStore {
 
   public register = async (newUser: UserCreationAttributes): Promise<void> => {
     try {
-      this.setErrorMessage(null);
       const response: IResponse<IUserResponse> | ErrorResponse = await axiosPostFunction('/registration', newUser);
 
       if (response.status !== HttpStatusCode.OK) {
@@ -43,7 +42,6 @@ export class AuthenticationStore {
 
   public login = async (email: string, password: string): Promise<void> => {
     try {
-      this.setErrorMessage(null);
       const response: IResponse<IUserResponse> | ErrorResponse = await axiosPostFunction('/login', {
         mail: email,
         password,
@@ -71,9 +69,14 @@ export class AuthenticationStore {
     this.errorMessage = message;
   }
 
+  public getErrorMessage = (): string | null => {
+    const errorMessage: string | null = this.errorMessage;
+    this.setErrorMessage(null);
+    return errorMessage;
+  }
+
   private fetchUserInfo = async (): Promise<void> => {
     try {
-      this.setErrorMessage(null);
       const token: string | null = localStorage.getItem('token');
       if (token !== null) {
         const response: IResponse<IUserResponse> | ErrorResponse = await axiosFetchFunction<IUserResponse>(

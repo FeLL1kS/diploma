@@ -15,6 +15,7 @@ import { useStore } from '../../../helpers/useStore';
 import { AuthenticationContext } from '../../../stores/Authentication';
 import { ProjectsContext } from '../../../stores/Projects';
 import { useForm } from '../../../helpers/useForm';
+import { useSnackbar } from 'notistack';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -56,8 +57,10 @@ const AddProject = observer(
   ({ onSubmit }: AddProjectProps): JSX.Element => {
     const classes = useStyles();
 
+    const { enqueueSnackbar } = useSnackbar();
+
     const { userData } = useStore(AuthenticationContext);
-    const { createProject, errorMessage } = useStore(ProjectsContext);
+    const { createProject, getErrorMessage } = useStore(ProjectsContext);
 
     const initialFormValues: ProjectCreationAttributes = {
       title: '',
@@ -115,19 +118,22 @@ const AddProject = observer(
       event.preventDefault();
       
       if (validate()) {
-        if (await createProject(values)) {
-          onSubmit(event);
-        };
+        const createResult: boolean = await createProject(values);
+
+        if (!createResult) {
+          const errorMessage: string | null = getErrorMessage();
+          if (errorMessage) {
+            enqueueSnackbar(`Ошибка: ${errorMessage}`, { variant: 'error' });
+          }
+          return;
+        }
+
+        onSubmit(event);
       }
     }
 
     return (
       <Container className={classes.root}>
-        {errorMessage &&
-          <Typography component="h2" variant="h6" style={{color: '#f44336'}} >
-            Ошибка: {errorMessage}
-          </Typography>
-        }
         <Form onSubmit={onFormSubmit}>
           <Grid container>
             <TextField 
@@ -147,6 +153,9 @@ const AddProject = observer(
               onChange={handleInputChange}
               error={!!errors.description}
               helperText={errors.description}
+              multiline
+              rows={10}
+              rowsMax={20}
             />
             <TextField 
               variant='outlined'
@@ -191,6 +200,9 @@ const AddProject = observer(
               onChange={handleInputChange}
               error={!!errors.controlPoints}
               helperText={errors.controlPoints}
+              multiline
+              rows={5}
+              rowsMax={10}
             />
             <div className={classes.submit}>
               <Button

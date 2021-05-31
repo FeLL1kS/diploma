@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { UserAttributes } from 'diploma';
 import { AuthenticationContext } from '../../../stores/Authentication';
 import AddProject from './AddProject';
+import { useSnackbar } from 'notistack';
 
 const TableCell = withStyles((theme: Theme) => 
   createStyles({
@@ -38,11 +39,12 @@ const useStyles = makeStyles({
 const Projects = observer(() => {
   const classes = useStyles();
 
-  const { projects } = useStore(ProjectsContext);
+  const { enqueueSnackbar } = useSnackbar();
+  
+  const { projects, getErrorMessage } = useStore(ProjectsContext);
   const { isUserAuthorized } = useStore(AuthenticationContext);
 
   const [open, setOpen] = React.useState(false);
-  
   
   const handleClickOpen = () => {
     setOpen(true);
@@ -54,6 +56,11 @@ const Projects = observer(() => {
 
   const onFormSubmit = async (event: React.SyntheticEvent) => {
     handleClose();
+  }
+
+  const errorMessage: string | null = getErrorMessage();
+  if (errorMessage) {
+    enqueueSnackbar(`Ошибка: ${errorMessage}`, { variant: 'error' });
   }
 
   return (

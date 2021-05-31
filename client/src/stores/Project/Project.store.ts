@@ -6,7 +6,7 @@ import { axiosFetchFunction, axiosPostFunction, IResponse } from "../../helpers/
 export class ProjectStore {
   public state: 'loading' | 'loaded' | 'error' = 'loading';
   
-  public errorMessage: string | null = null;
+  private errorMessage: string | null = null;
 
   private id: string | null = null;
 
@@ -27,9 +27,14 @@ export class ProjectStore {
     this.errorMessage = message;
   }
 
+  public getErrorMessage = (): string | null => {
+    const errorMessage: string | null = this.errorMessage;
+    this.setErrorMessage(null);
+    return errorMessage;
+  }
+
   private fetchData = async (): Promise<void> => {
     try {
-      this.setErrorMessage(null);
       const projectResponse: IResponse<ProjectDTO> | ErrorResponse = await axiosFetchFunction(`/projects/${this.id}`);
       
       if (projectResponse.status !== HttpStatusCode.OK) {
@@ -56,7 +61,6 @@ export class ProjectStore {
 
   public addUserToProjectVacancy = async (vacancyId: string): Promise<void> => {
     try {
-      this.setErrorMessage(null);
       if (!this.project)
       {
         return;

@@ -8,7 +8,7 @@ import { HttpStatusCode } from '../../enums';
 export class DepartmentsStore {
   public state: 'loading' | 'loaded' | 'error' = 'loading';
 
-  public errorMessage: string | null = null;
+  private errorMessage: string | null = null;
 
   public departments: DepartmentAttributes[] | null = null;
 
@@ -21,9 +21,14 @@ export class DepartmentsStore {
     this.errorMessage = message;
   }
 
+  public getErrorMessage = (): string | null => {
+    const errorMessage: string | null = this.errorMessage;
+    this.setErrorMessage(null);
+    return errorMessage;
+  }
+
   private fetchDepartments = async (): Promise<void> => {
     try {
-      this.setErrorMessage(null);
       const response: IResponse<DepartmentAttributes[]> | ErrorResponse = await axiosFetchFunction<DepartmentAttributes[]>('/departments');
 
       if (response.status !== HttpStatusCode.OK) {
